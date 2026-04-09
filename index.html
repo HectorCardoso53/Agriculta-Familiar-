@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,257 +25,271 @@
   <link rel="stylesheet" href="css/modals.css">
   <link rel="stylesheet" href="css/utils.css">
 </head>
+
 <body>
 
-<!-- ══════════════════════════════════════
+  <!-- ══════════════════════════════════════
      SIDEBAR
 ════════════════════════════════════════ -->
-<nav id="sidebar">
-  <div class="sidebar-logo">
-    <span>Sistema</span>
-    <strong>PNAE</strong>
-  </div>
-
-  <div class="sidebar-nav">
-    <div class="nav-label">Menu</div>
-
-    <div class="nav-item active" id="nav-dashboard" onclick="navigate('dashboard')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="3" y="3" width="7" height="7"/>
-        <rect x="14" y="3" width="7" height="7"/>
-        <rect x="14" y="14" width="7" height="7"/>
-        <rect x="3" y="14" width="7" height="7"/>
-      </svg>
-      <span>Dashboard</span>
+  <nav id="sidebar">
+    <div class="sidebar-logo">
+      <img src="img/prefeitura.png" alt="Prefeitura">
+      <div class="sidebar-logo-text">
+        <span>Sistema</span>
+        <strong>PNAE</strong>
+      </div>
     </div>
 
-    <div class="nav-item" id="nav-responsaveis" onclick="navigate('responsaveis')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-      </svg>
-      <span>Responsáveis</span>
+    <div class="sidebar-nav">
+      <div class="nav-label">Menu</div>
+
+      <div class="nav-item active" id="nav-dashboard" onclick="navigate('dashboard')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+        </svg>
+        <span>Dashboard</span>
+      </div>
+
+      <div class="nav-item" id="nav-responsaveis" onclick="navigate('responsaveis')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+        <span>Responsáveis</span>
+      </div>
+
+      <div class="nav-item" id="nav-projetos" onclick="navigate('projetos')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+        </svg>
+        <span>Projetos</span>
+      </div>
+
+      <div class="nav-item" id="nav-lancamentos" onclick="navigate('lancamentos')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6" />
+          <line x1="8" y1="12" x2="21" y2="12" />
+          <line x1="8" y1="18" x2="21" y2="18" />
+          <line x1="3" y1="6" x2="3.01" y2="6" />
+          <line x1="3" y1="12" x2="3.01" y2="12" />
+          <line x1="3" y1="18" x2="3.01" y2="18" />
+        </svg>
+        <span>Lançamentos</span>
+      </div>
     </div>
 
-    <div class="nav-item" id="nav-projetos" onclick="navigate('projetos')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-      </svg>
-      <span>Projetos</span>
+    <!-- Usuário logado -->
+    <div class="sidebar-user" id="sidebar-user">
+      <div class="sidebar-avatar">?</div>
+      <span>Carregando...</span>
     </div>
 
-    <div class="nav-item" id="nav-lancamentos" onclick="navigate('lancamentos')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="8" y1="6"  x2="21" y2="6"/>
-        <line x1="8" y1="12" x2="21" y2="12"/>
-        <line x1="8" y1="18" x2="21" y2="18"/>
-        <line x1="3" y1="6"  x2="3.01" y2="6"/>
-        <line x1="3" y1="12" x2="3.01" y2="12"/>
-        <line x1="3" y1="18" x2="3.01" y2="18"/>
-      </svg>
-      <span>Lançamentos</span>
-    </div>
-  </div>
-
-  <!-- Usuário logado -->
-  <div class="sidebar-user" id="sidebar-user">
-    <div class="sidebar-avatar">?</div>
-    <span>Carregando...</span>
-  </div>
-
-  <!-- Logout + versão -->
-  <div class="sidebar-footer">
-    <span>v1.0 — 2025</span>
-    <button onclick="logout()" title="Sair" style="
+    <!-- Logout + versão -->
+    <div class="sidebar-footer">
+      <span>v1.0 — 2025</span>
+      <button onclick="logout()" title="Sair" style="
       background:none;border:none;cursor:pointer;
       color:rgba(255,255,255,.4);padding:2px;
       display:flex;align-items:center;gap:4px;font-size:11px;
       transition:color .15s;
-    " onmouseover="this.style.color='rgba(255,255,255,.8)'"
-       onmouseout="this.style.color='rgba(255,255,255,.4)'">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-        <polyline points="16 17 21 12 16 7"/>
-        <line x1="21" y1="12" x2="9" y2="12"/>
-      </svg>
-      <span>Sair</span>
-    </button>
-  </div>
-</nav>
+    " onmouseover="this.style.color='rgba(255,255,255,.8)'" onmouseout="this.style.color='rgba(255,255,255,.4)'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+        <span>Sair</span>
+      </button>
+    </div>
+  </nav>
 
-<!-- ══════════════════════════════════════
+  <!-- ══════════════════════════════════════
      ÁREA PRINCIPAL
 ════════════════════════════════════════ -->
-<div id="main">
-  <div id="topbar">
-    <div>
-      <div id="page-title">Dashboard</div>
-      <div id="breadcrumb"></div>
+  <div id="main">
+    <div id="topbar">
+      <div>
+        <div id="page-title">Dashboard</div>
+        <div id="breadcrumb"></div>
+      </div>
+      <div class="flex gap-8">
+        <span class="badge badge-green">PNAE Ativo</span>
+      </div>
     </div>
-    <div class="flex gap-8">
-      <span class="badge badge-green">PNAE Ativo</span>
-    </div>
+    <div id="content"></div>
   </div>
-  <div id="content"></div>
-</div>
 
-<!-- ══════════════════════════════════════
+  <!-- ══════════════════════════════════════
      MODAL — RESPONSÁVEL
 ════════════════════════════════════════ -->
-<div class="modal-bg" id="modal-resp">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="modal-resp-title">Novo Responsável</div>
-      <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal('modal-resp')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid cols-2">
-        <div class="form-group full">
-          <label>Nome / Razão Social</label>
-          <input id="r-nome" placeholder="Nome completo ou razão social">
+  <div class="modal-bg" id="modal-resp">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-resp-title">Novo Responsável</div>
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal('modal-resp')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid cols-2">
+          <div class="form-group full">
+            <label>Nome / Razão Social</label>
+            <input id="r-nome" placeholder="Nome completo ou razão social">
+          </div>
+          <div class="form-group"><label>CNPJ</label><input id="r-cnpj" placeholder="00.000.000/0000-00"></div>
+          <div class="form-group"><label>CEP</label><input id="r-cep" placeholder="00000-000"></div>
+          <div class="form-group full"><label>Endereço</label><input id="r-endereco" placeholder="Rua, número, bairro">
+          </div>
+          <div class="form-group"><label>Município / UF</label><input id="r-municipio" placeholder="Município — UF">
+          </div>
+          <div class="form-group"><label>Representante Legal</label><input id="r-representante"
+              placeholder="Nome completo"></div>
+          <div class="form-group"><label>CPF do Representante</label><input id="r-cpf" placeholder="000.000.000-00">
+          </div>
+          <div class="form-group"><label>Telefone</label><input id="r-telefone" placeholder="(00) 00000-0000"></div>
+          <div class="form-group"><label>Banco</label><input id="r-banco" placeholder="Nome do banco"></div>
+          <div class="form-group"><label>Agência</label><input id="r-agencia" placeholder="0000-0"></div>
+          <div class="form-group"><label>Conta</label><input id="r-conta" placeholder="00000-0"></div>
         </div>
-        <div class="form-group"><label>CNPJ</label><input id="r-cnpj" placeholder="00.000.000/0000-00"></div>
-        <div class="form-group"><label>CEP</label><input id="r-cep" placeholder="00000-000"></div>
-        <div class="form-group full"><label>Endereço</label><input id="r-endereco" placeholder="Rua, número, bairro"></div>
-        <div class="form-group"><label>Município / UF</label><input id="r-municipio" placeholder="Município — UF"></div>
-        <div class="form-group"><label>Representante Legal</label><input id="r-representante" placeholder="Nome completo"></div>
-        <div class="form-group"><label>CPF do Representante</label><input id="r-cpf" placeholder="000.000.000-00"></div>
-        <div class="form-group"><label>Telefone</label><input id="r-telefone" placeholder="(00) 00000-0000"></div>
-        <div class="form-group"><label>Banco</label><input id="r-banco" placeholder="Nome do banco"></div>
-        <div class="form-group"><label>Agência</label><input id="r-agencia" placeholder="0000-0"></div>
-        <div class="form-group"><label>Conta</label><input id="r-conta" placeholder="00000-0"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-resp')">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarResponsavel()">Salvar</button>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-resp')">Cancelar</button>
-      <button class="btn btn-primary"   onclick="salvarResponsavel()">Salvar</button>
-    </div>
   </div>
-</div>
 
-<!-- ══════════════════════════════════════
+  <!-- ══════════════════════════════════════
      MODAL — PROJETO
 ════════════════════════════════════════ -->
-<div class="modal-bg" id="modal-proj">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Novo Projeto</div>
-      <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal('modal-proj')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid cols-2">
-        <div class="form-group full">
-          <label>Nome do Projeto</label>
-          <input id="p-nome" placeholder="Ex: Projeto Hortifrúti 2025">
-        </div>
-        <div class="form-group">
-          <label>Responsável</label>
-          <div class="select-wrap"><select id="p-resp"></select></div>
-        </div>
-        <div class="form-group">
-          <label>Data</label>
-          <input id="p-data" type="date">
-        </div>
+  <div class="modal-bg" id="modal-proj">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Novo Projeto</div>
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal('modal-proj')">✕</button>
       </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-proj')">Cancelar</button>
-      <button class="btn btn-primary"   onclick="salvarProjeto()">Salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     MODAL — FORNECEDOR
-════════════════════════════════════════ -->
-<div class="modal-bg" id="modal-forn">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Novo Fornecedor</div>
-      <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal('modal-forn')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid cols-2">
-        <div class="form-group full">
-          <label>Nome do Agricultor / Fornecedor</label>
-          <input id="f-nome" placeholder="Nome completo">
-        </div>
-        <div class="form-group"><label>CPF</label><input id="f-cpf" placeholder="000.000.000-00"></div>
-        <div class="form-group"><label>DAP</label><input id="f-dap" placeholder="Número da DAP"></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-forn')">Cancelar</button>
-      <button class="btn btn-primary"   onclick="salvarFornecedor()">Salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     MODAL — PRODUTO
-════════════════════════════════════════ -->
-<div class="modal-bg" id="modal-prod">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Novo Produto</div>
-      <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal('modal-prod')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid cols-2">
-        <div class="form-group full">
-          <label>Produto</label>
-          <input id="pr-produto" placeholder="Ex: Alface Americana">
-        </div>
-        <div class="form-group">
-          <label>Unidade</label>
-          <div class="select-wrap">
-            <select id="pr-unidade">
-              <option>kg</option><option>g</option><option>un</option>
-              <option>cx</option><option>frd</option><option>dz</option>
-              <option>L</option><option>mL</option><option>saca</option>
-            </select>
+      <div class="modal-body">
+        <div class="form-grid cols-2">
+          <div class="form-group full">
+            <label>Nome do Projeto</label>
+            <input id="p-nome" placeholder="Ex: Projeto Hortifrúti 2025">
+          </div>
+          <div class="form-group">
+            <label>Responsável</label>
+            <div class="select-wrap"><select id="p-resp"></select></div>
+          </div>
+          <div class="form-group">
+            <label>Data</label>
+            <input id="p-data" type="date">
           </div>
         </div>
-        <div class="form-group">
-          <label>Quantidade</label>
-          <input id="pr-qtd" type="number" placeholder="0" min="0" step="0.01">
-        </div>
-        <div class="form-group">
-          <label>Preço Unitário (R$)</label>
-          <input id="pr-preco" type="number" placeholder="0.00" min="0" step="0.01">
-        </div>
-        <div class="form-group full">
-          <label>Total Calculado</label>
-          <input id="pr-total" readonly placeholder="R$ 0,00"
-            style="background:var(--surface2);color:var(--green-dark);font-weight:600;">
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-proj')">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarProjeto()">Salvar</button>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-prod')">Cancelar</button>
-      <button class="btn btn-primary"   onclick="salvarProduto()">Salvar</button>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     MODAL — FORNECEDOR
+════════════════════════════════════════ -->
+  <div class="modal-bg" id="modal-forn">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Novo Fornecedor</div>
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal('modal-forn')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid cols-2">
+          <div class="form-group full">
+            <label>Nome do Agricultor / Fornecedor</label>
+            <input id="f-nome" placeholder="Nome completo">
+          </div>
+          <div class="form-group"><label>CPF</label><input id="f-cpf" placeholder="000.000.000-00"></div>
+          <div class="form-group"><label>DAP</label><input id="f-dap" placeholder="Número da DAP"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-forn')">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarFornecedor()">Salvar</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ══════════════════════════════════════
+  <!-- ══════════════════════════════════════
+     MODAL — PRODUTO
+════════════════════════════════════════ -->
+  <div class="modal-bg" id="modal-prod">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Novo Produto</div>
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal('modal-prod')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid cols-2">
+          <div class="form-group full">
+            <label>Produto</label>
+            <input id="pr-produto" placeholder="Ex: Alface Americana">
+          </div>
+          <div class="form-group">
+            <label>Unidade</label>
+            <div class="select-wrap">
+              <select id="pr-unidade">
+                <option>kg</option>
+                <option>g</option>
+                <option>un</option>
+                <option>cx</option>
+                <option>frd</option>
+                <option>dz</option>
+                <option>L</option>
+                <option>mL</option>
+                <option>saca</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Quantidade</label>
+            <input id="pr-qtd" type="number" placeholder="0" min="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label>Preço Unitário (R$)</label>
+            <input id="pr-preco" type="number" placeholder="0.00" min="0" step="0.01">
+          </div>
+          <div class="form-group full">
+            <label>Total Calculado</label>
+            <input id="pr-total" readonly placeholder="R$ 0,00"
+              style="background:var(--surface2);color:var(--green-dark);font-weight:600;">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-prod')">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarProduto()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
      SCRIPTS (ordem de dependências)
 ════════════════════════════════════════ -->
-<script src="js/auth.js"></script>
-<script src="js/utils.js"></script>
-<script src="js/router.js"></script>
-<script src="js/dashboard.js"></script>
-<script src="js/responsaveis.js"></script>
-<script src="js/projetos.js"></script>
-<script src="js/lancamentos.js"></script>
-<script src="js/pdf.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/responsaveis.js"></script>
+  <script src="js/projetos.js"></script>
+  <script src="js/lancamentos.js"></script>
+  <script src="js/pdf.js"></script>
 
-<script>
-  // auth.js chama initModals() e render() após confirmar usuário logado.
-  // Nada adicional necessário aqui.
-</script>
+  <script>
+    // auth.js chama initModals() e render() após confirmar usuário logado.
+    // Nada adicional necessário aqui.
+  </script>
 
 </body>
+
 </html>

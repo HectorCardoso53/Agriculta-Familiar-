@@ -11,36 +11,37 @@
 }
 
 :root {
-  /* Paleta principal */
-  --green:        #1a7a4a;
-  --green-light:  #d4edda;
-  --green-mid:    #2ea05f;
-  --green-dark:   #0f5231;
+  /* Paleta principal (AGORA AZUL) */
+  --green:        #2563eb;   /* azul principal */
+  --green-light:  #dbeafe;   /* azul claro */
+  --green-mid:    #3b82f6;   /* azul médio */
+  --green-dark:   #1e40af;   /* azul escuro */
 
   /* Paleta secundária */
   --amber:        #c97a1a;
   --amber-light:  #fef3dc;
-  --blue:         #1a5f7a;
-  --blue-light:   #dceef5;
+
+  --blue:         #1d4ed8;   /* reforço de azul */
+  --blue-light:   #e0edff;
+
   --red:          #b83232;
   --red-light:    #fde8e8;
 
-  /* Superfícies */
-  --bg:           #f4f6f3;
+  /* Superfícies (leve ajuste pra combinar com azul) */
+  --bg:           #f4f7ff;
   --surface:      #ffffff;
-  --surface2:     #f9faf8;
-  --border:       #e0e4de;
+  --surface2:     #f8faff;
+  --border:       #e3e8f0;
 
   /* Tipografia */
-  --text:         #1c2118;
-  --muted:        #6b7568;
+  --text:         #1e293b;
+  --muted:        #64748b;
 
   /* Layout */
   --sidebar-w:    240px;
   --radius:       10px;
   --shadow:       0 1px 4px rgba(0,0,0,.08);
 }
-
 body {
   font-family: 'DM Sans', sans-serif;
   background: var(--bg);

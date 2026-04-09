@@ -137,6 +137,14 @@ body.login-page::before {
 }
 .login-links a:hover { text-decoration: underline; }
 
+
+/* Logo da prefeitura */
+.login-logo img {
+  max-width: 80px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
 /* Spinner no botão */
 .btn-spinner {
   width: 16px; height: 16px;
@@ -168,3 +176,54 @@ body.login-page::before {
   z-index: 999;
 }
 .toast.show { opacity: 1; transform: translateY(0); }
+
+
+/* 🔧 Corrige campos de input (email e senha) */
+
+.input-icon-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: var(--surface);
+  transition: border-color .2s, box-shadow .2s;
+}
+
+/* Ícone */
+.input-icon-wrap svg {
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+}
+
+/* Input */
+.input-icon-wrap input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  background: transparent;
+  color: var(--text);
+}
+
+/* Foco (fica bonito e profissional) */
+.input-icon-wrap:focus-within {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* Placeholder */
+.input-icon-wrap input::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+/* Aumenta espaçamento dos labels */
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
