@@ -21,12 +21,9 @@ const state = {
   _cache: {},
 };
 
-// ── Referência base do usuário ────────────
+// ── Referência global (compartilhada) ──────
 function userCol(colecao) {
-  return window.db
-    .collection('users')
-    .doc(window.currentUser.uid)
-    .collection(colecao);
+  return window.db.collection(colecao);
 }
 
 // ── LOAD: lê todos os docs de uma coleção ─
