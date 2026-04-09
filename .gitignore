@@ -1,0 +1,41 @@
+# ═══════════════════════════════════════════
+#  .gitignore — PNAE Sistema
+# ═══════════════════════════════════════════
+
+# ── Ambiente e segredos ───────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Dependências ──────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# ── Build / dist ──────────────────────────
+dist/
+build/
+.vite/
+.parcel-cache/
+
+# ── Editores ──────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# ── Logs ──────────────────────────────────
+*.log
+logs/
+
+# ── Temporários ───────────────────────────
+*.tmp
+*.temp
+.cache/

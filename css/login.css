@@ -1,0 +1,170 @@
+/* ═══════════════════════════════════════════
+   login.css — Tela de autenticação
+   ═══════════════════════════════════════════ */
+
+body.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* Padrão sutil no fundo */
+body.login-page::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(26,122,74,.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(26,122,74,.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.login-wrap {
+  width: 100%;
+  max-width: 420px;
+  padding: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.login-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+  overflow: hidden;
+}
+
+/* Faixa verde no topo do card */
+.login-card-top {
+  background: var(--green-dark);
+  padding: 28px 32px 24px;
+  text-align: center;
+}
+.login-logo {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+  margin-bottom: 4px;
+}
+.login-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -.01em;
+}
+.login-subtitle {
+  font-size: 13px;
+  color: rgba(255,255,255,.55);
+  margin-top: 4px;
+}
+
+/* Corpo do formulário */
+.login-body {
+  padding: 28px 32px 32px;
+}
+
+.login-body .form-group {
+  margin-bottom: 16px;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Botão Google */
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text);
+  cursor: pointer;
+  transition: background .15s, box-shadow .15s;
+}
+.btn-google:hover {
+  background: var(--surface2);
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.btn-google svg { flex-shrink: 0; }
+
+/* Mensagem de erro */
+.login-error {
+  background: var(--red-light);
+  color: var(--red);
+  border-radius: 7px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: none;
+}
+.login-error.show { display: block; }
+
+/* Links abaixo */
+.login-links {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.login-links a {
+  color: var(--green);
+  text-decoration: none;
+  font-weight: 500;
+}
+.login-links a:hover { text-decoration: underline; }
+
+/* Spinner no botão */
+.btn-spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .6s linear infinite;
+  display: none;
+}
+.loading .btn-spinner { display: block; }
+.loading .btn-text    { display: none; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Toast de sucesso */
+.toast {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: var(--green-dark);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .2s, transform .2s;
+  z-index: 999;
+}
+.toast.show { opacity: 1; transform: translateY(0); }

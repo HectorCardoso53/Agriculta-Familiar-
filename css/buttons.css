@@ -1,0 +1,43 @@
+/* ═══════════════════════════════════════════
+   buttons.css — Todos os estilos de botão
+   ═══════════════════════════════════════════ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: background .15s, opacity .15s, transform .1s;
+  white-space: nowrap;
+}
+.btn:active { transform: scale(.98); }
+
+.btn-primary         { background: var(--green);      color: #fff; }
+.btn-primary:hover   { background: var(--green-mid); }
+
+.btn-secondary       { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+
+.btn-danger          { background: var(--red-light);   color: var(--red); }
+.btn-danger:hover    { background: #fac9c9; }
+
+.btn-amber           { background: var(--amber-light); color: var(--amber); }
+.btn-amber:hover     { background: #fde0a5; }
+
+.btn-outline-green {
+  background: transparent;
+  color: var(--green);
+  border: 1.5px solid var(--green);
+}
+.btn-outline-green:hover { background: var(--green-light); }
+
+.btn-sm   { padding: 5px 10px; font-size: 12px; }
+.btn-lg   { padding: 11px 22px; font-size: 15px; }
+.btn-icon { padding: 6px; border-radius: 6px; }
+.btn-full { width: 100%; justify-content: center; }

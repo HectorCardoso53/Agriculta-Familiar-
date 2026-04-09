@@ -1,0 +1,50 @@
+/* ═══════════════════════════════════════════
+   variables.css — Design tokens e reset global
+   ═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Paleta principal */
+  --green:        #1a7a4a;
+  --green-light:  #d4edda;
+  --green-mid:    #2ea05f;
+  --green-dark:   #0f5231;
+
+  /* Paleta secundária */
+  --amber:        #c97a1a;
+  --amber-light:  #fef3dc;
+  --blue:         #1a5f7a;
+  --blue-light:   #dceef5;
+  --red:          #b83232;
+  --red-light:    #fde8e8;
+
+  /* Superfícies */
+  --bg:           #f4f6f3;
+  --surface:      #ffffff;
+  --surface2:     #f9faf8;
+  --border:       #e0e4de;
+
+  /* Tipografia */
+  --text:         #1c2118;
+  --muted:        #6b7568;
+
+  /* Layout */
+  --sidebar-w:    240px;
+  --radius:       10px;
+  --shadow:       0 1px 4px rgba(0,0,0,.08);
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+}

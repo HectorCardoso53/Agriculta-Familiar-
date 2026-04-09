@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PNAE — Entrar</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/buttons.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/utils.css">
+  <link rel="stylesheet" href="css/login.css">
+
+  <!-- Firebase SDK (compat v9) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+</head>
+
+<body class="login-page">
+
+  <div class="login-wrap">
+    <div class="login-card">
+
+      <!-- Cabeçalho verde -->
+      <div class="login-card-top">
+        <div class="login-logo">Sistema</div>
+        <div class="login-title">PNAE</div>
+        <div class="login-subtitle">Programa Nacional de Alimentação Escolar</div>
+      </div>
+
+      <!-- Formulário -->
+      <div class="login-body">
+
+        <!-- Erro -->
+        <div class="login-error" id="login-error"></div>
+
+        <!-- E-mail -->
+        <div class="form-group">
+          <label>E-mail</label>
+          <div class="input-icon-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+            <input id="email" type="email" placeholder="seu@email.com" autocomplete="email">
+          </div>
+        </div>
+
+        <!-- Senha -->
+        <div class="form-group">
+          <label>Senha</label>
+          <div class="input-icon-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <input id="senha" type="password" placeholder="••••••••" autocomplete="current-password">
+          </div>
+          <div style="text-align:right;margin-top:4px">
+            <a href="#" onclick="recuperarSenha()" style="font-size:12px;color:var(--green);text-decoration:none">
+              Esqueceu a senha?
+            </a>
+          </div>
+        </div>
+
+        <!-- Botão entrar -->
+        <button class="btn btn-primary btn-full btn-lg" id="btn-entrar" onclick="entrarEmail()">
+          <div class="btn-spinner" id="spinner-email"></div>
+          <span class="btn-text">Entrar</span>
+        </button>
+
+        <!-- Divisor -->
+        <div class="login-divider">ou continue com</div>
+
+        <!-- Google -->
+        <button class="btn-google" id="btn-google" onclick="entrarGoogle()">
+          <!-- Ícone Google oficial -->
+          <svg width="18" height="18" viewBox="0 0 48 48">
+            <path fill="#EA4335"
+              d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+            <path fill="#4285F4"
+              d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+            <path fill="#FBBC05"
+              d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+            <path fill="#34A853"
+              d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+          </svg>
+          Continuar com Google
+        </button>
+
+        <!-- Links -->
+        <div class="login-links">
+          Não tem conta? <a href="#" onclick="mostrarCadastro()">Criar conta</a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Rodapé -->
+    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:16px">
+      Agricultura Familiar · PNAE &nbsp;·&nbsp; v1.0
+    </p>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Modal cadastro -->
+  <div class="modal-bg" id="modal-cadastro" style="
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);
+  z-index:200;align-items:center;justify-content:center;padding:16px;">
+    <div style="
+    background:var(--surface);border-radius:14px;width:90%;max-width:440px;
+    box-shadow:0 8px 32px rgba(0,0,0,.18);">
+      <div
+        style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:16px;font-weight:600">Criar conta</div>
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="fecharCadastro()">✕</button>
+      </div>
+      <div style="padding:20px 24px">
+        <div class="login-error" id="cadastro-error"></div>
+        <div class="form-group mb-16">
+          <label>Nome completo</label>
+          <input id="cad-nome" type="text" placeholder="Seu nome">
+        </div>
+        <div class="form-group mb-16">
+          <label>E-mail</label>
+          <input id="cad-email" type="email" placeholder="seu@email.com">
+        </div>
+        <div class="form-group mb-16">
+          <label>Senha</label>
+          <input id="cad-senha" type="password" placeholder="Mínimo 6 caracteres">
+        </div>
+        <div class="form-group">
+          <label>Confirmar senha</label>
+          <input id="cad-senha2" type="password" placeholder="Repita a senha">
+        </div>
+      </div>
+      <div style="padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;">
+        <button class="btn btn-secondary" onclick="fecharCadastro()">Cancelar</button>
+        <button class="btn btn-primary" id="btn-cadastrar" onclick="cadastrar()">
+          <div class="btn-spinner" id="spinner-cad"></div>
+          <span class="btn-text">Criar conta</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <script>
+   
+    const firebaseConfig = {
+      apiKey: "AIzaSyAgSU0rM0KmOy5-nilSCivSuIRJbD4sZ5k",
+      authDomain: "semed-2f097.firebaseapp.com",
+      projectId: "semed-2f097",
+      storageBucket: "semed-2f097.firebasestorage.app",
+      messagingSenderId: "695866916407",
+      appId: "1:695866916407:web:d50b7e30a43121898c89b2",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // ── Persistência de sessão ────────────────
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+    // ── Redireciona se já logado ──────────────
+    auth.onAuthStateChanged(user => {
+      if (user) window.location.href = 'index.html';
+    });
+
+    // ═══════════════════════════════════════════
+    //  Login com e-mail e senha
+    // ═══════════════════════════════════════════
+    async function entrarEmail() {
+      const email = document.getElementById('email').value.trim();
+      const senha = document.getElementById('senha').value;
+
+      if (!email || !senha) { mostrarErro('Preencha e-mail e senha.'); return; }
+
+      setLoading('btn-entrar', 'spinner-email', true);
+      esconderErro();
+
+      try {
+        await auth.signInWithEmailAndPassword(email, senha);
+        // onAuthStateChanged cuida do redirect
+      } catch (e) {
+        setLoading('btn-entrar', 'spinner-email', false);
+        mostrarErro(traduzirErro(e.code));
+      }
+    }
+
+    // ── Enter no input dispara login ──────────
+    document.getElementById('senha').addEventListener('keydown', e => {
+      if (e.key === 'Enter') entrarEmail();
+    });
+
+    // ═══════════════════════════════════════════
+    //  Login com Google
+    // ═══════════════════════════════════════════
+    async function entrarGoogle() {
+      esconderErro();
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.addScope('email');
+      try {
+        await auth.signInWithPopup(provider);
+      } catch (e) {
+        if (e.code !== 'auth/popup-closed-by-user') {
+          mostrarErro(traduzirErro(e.code));
+        }
+      }
+    }
+
+    // ═══════════════════════════════════════════
+    //  Cadastro de novo usuário
+    // ═══════════════════════════════════════════
+    function mostrarCadastro() {
+      document.getElementById('modal-cadastro').style.display = 'flex';
+    }
+    function fecharCadastro() {
+      document.getElementById('modal-cadastro').style.display = 'none';
+      esconderErroCad();
+    }
+
+    async function cadastrar() {
+      const nome = document.getElementById('cad-nome').value.trim();
+      const email = document.getElementById('cad-email').value.trim();
+      const senha = document.getElementById('cad-senha').value;
+      const senha2 = document.getElementById('cad-senha2').value;
+
+      if (!nome || !email || !senha) { mostrarErroCad('Preencha todos os campos.'); return; }
+      if (senha !== senha2) { mostrarErroCad('As senhas não coincidem.'); return; }
+      if (senha.length < 6) { mostrarErroCad('A senha deve ter ao menos 6 caracteres.'); return; }
+
+      setLoading('btn-cadastrar', 'spinner-cad', true);
+      esconderErroCad();
+
+      try {
+        const cred = await auth.createUserWithEmailAndPassword(email, senha);
+        await cred.user.updateProfile({ displayName: nome });
+        fecharCadastro();
+        showToast('Conta criada com sucesso!');
+      } catch (e) {
+        setLoading('btn-cadastrar', 'spinner-cad', false);
+        mostrarErroCad(traduzirErro(e.code));
+      }
+    }
+
+    // ═══════════════════════════════════════════
+    //  Recuperação de senha
+    // ═══════════════════════════════════════════
+    async function recuperarSenha() {
+      const email = document.getElementById('email').value.trim();
+      if (!email) { mostrarErro('Digite seu e-mail acima primeiro.'); return; }
+      try {
+        await auth.sendPasswordResetEmail(email);
+        showToast('E-mail de recuperação enviado!');
+      } catch (e) {
+        mostrarErro(traduzirErro(e.code));
+      }
+    }
+
+    // ═══════════════════════════════════════════
+    //  Helpers de UI
+    // ═══════════════════════════════════════════
+    function mostrarErro(msg) {
+      const el = document.getElementById('login-error');
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+    function esconderErro() {
+      document.getElementById('login-error').classList.remove('show');
+    }
+    function mostrarErroCad(msg) {
+      const el = document.getElementById('cadastro-error');
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+    function esconderErroCad() {
+      document.getElementById('cadastro-error').classList.remove('show');
+    }
+
+    function setLoading(btnId, spinnerId, loading) {
+      const btn = document.getElementById(btnId);
+      if (loading) btn.classList.add('loading');
+      else btn.classList.remove('loading');
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 3000);
+    }
+
+    // ── Tradução de erros Firebase ────────────
+    function traduzirErro(code) {
+      const map = {
+        'auth/user-not-found': 'Usuário não encontrado.',
+        'auth/wrong-password': 'Senha incorreta.',
+        'auth/invalid-email': 'E-mail inválido.',
+        'auth/email-already-in-use': 'Este e-mail já está em uso.',
+        'auth/weak-password': 'Senha muito fraca (mínimo 6 caracteres).',
+        'auth/too-many-requests': 'Muitas tentativas. Aguarde alguns minutos.',
+        'auth/network-request-failed': 'Falha de conexão. Verifique sua internet.',
+        'auth/invalid-credential': 'E-mail ou senha incorretos.',
+      };
+      return map[code] || `Erro: ${code}`;
+    }
+  </script>
+</body>
+
+</html>
