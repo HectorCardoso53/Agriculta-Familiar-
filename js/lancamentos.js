@@ -221,11 +221,21 @@ async function excluirFornecedor(fid) {
 function abrirModalProd(fid, pid) {
   state.fornecedorSelecionado = fid;
   state.projetoSelecionado    = pid;
+
+  // Limpa todos os campos
   ['pr-produto','pr-qtd','pr-preco','pr-total'].forEach(id => {
     document.getElementById(id).value = '';
   });
-  document.getElementById('pr-unidade').value = 'kg';
+  document.getElementById('pr-unidade').value = 'KG';
 
+  // Popula o select com os produtos PNAE (primeira vez)
+  popularSelectPNAE();
+
+  // Reseta o select para opção vazia
+  const sel = document.getElementById('pr-select-pnae');
+  if (sel) sel.value = '';
+
+  // Cálculo automático do total
   const calc = () => {
     const q = parseFloat(document.getElementById('pr-qtd').value)   || 0;
     const p = parseFloat(document.getElementById('pr-preco').value) || 0;
@@ -233,6 +243,7 @@ function abrirModalProd(fid, pid) {
   };
   document.getElementById('pr-qtd').oninput   = calc;
   document.getElementById('pr-preco').oninput = calc;
+
   openModal('modal-prod');
 }
 

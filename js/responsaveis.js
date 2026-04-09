@@ -61,7 +61,9 @@ function _cardResponsavel(r, projets) {
       </div>
     </div>`;
 }
+
 // ── Detalhe ───────────────────────────────
+
 function abrirResponsavel(id) {
   state.responsavelSelecionado = id;
   state.paginaAtual = 'responsaveis';

@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="img/prefeitura.png">
   <title>PNAE — Gestão de Projetos</title>
 
   <!-- Firebase SDK -->
@@ -34,9 +35,10 @@
   <nav id="sidebar">
     <div class="sidebar-logo">
       <img src="img/prefeitura.png" alt="Prefeitura">
+
       <div class="sidebar-logo-text">
         <span>Sistema</span>
-        <strong>PNAE</strong>
+        <strong>PNAE ORIXIMINÁ</strong>
       </div>
     </div>
 
@@ -83,6 +85,13 @@
       </div>
     </div>
 
+    <div class="sidebar-doc">
+      <a href="https://oriximina.1doc.com.br/" target="_blank" class="btn-doc">
+        <img src="img/1doc.png" alt="Prefeitura">
+        <span>1Doc Prefeitura</span>
+      </a>
+    </div>
+
     <!-- Usuário logado -->
     <div class="sidebar-user" id="sidebar-user">
       <div class="sidebar-avatar">?</div>
@@ -91,7 +100,7 @@
 
     <!-- Logout + versão -->
     <div class="sidebar-footer">
-      <span>v1.0 — 2025</span>
+      <span>Secretaria de Eficiência Governamental-SEMEG</span>
       <button onclick="logout()" title="Sair" style="
       background:none;border:none;cursor:pointer;
       color:rgba(255,255,255,.4);padding:2px;
@@ -122,7 +131,19 @@
       </div>
     </div>
     <div id="content"></div>
+
+    <div id="main-footer">
+      <div class="footer-left">
+        Prefeitura de Oriximiná • Secretaria Municipal de Educação
+      </div>
+
+      <div class="footer-right">
+        Sistema PNAE
+      </div>
+    </div>
   </div>
+
+
 
   <!-- ══════════════════════════════════════
      MODAL — RESPONSÁVEL
@@ -231,15 +252,25 @@
       </div>
       <div class="modal-body">
         <div class="form-grid cols-2">
+
           <div class="form-group full">
             <label>Produto</label>
-            <input id="pr-produto" placeholder="Ex: Alface Americana">
+            <div class="select-wrap">
+              <select id="pr-select-pnae" onchange="selecionarProdutoPNAESelect(this.value)">
+                <option value="">— Selecione um produto —</option>
+              </select>
+            </div>
+            <input id="pr-produto" type="hidden">
           </div>
+
           <div class="form-group">
             <label>Unidade</label>
             <div class="select-wrap">
               <select id="pr-unidade">
-                <option>kg</option>
+                <option>KG</option>
+                <option>PCT</option>
+                <option>UNID</option>
+                <option>CUBA</option>
                 <option>g</option>
                 <option>un</option>
                 <option>cx</option>
@@ -247,23 +278,26 @@
                 <option>dz</option>
                 <option>L</option>
                 <option>mL</option>
-                <option>saca</option>
               </select>
             </div>
           </div>
-          <div class="form-group">
-            <label>Quantidade</label>
-            <input id="pr-qtd" type="number" placeholder="0" min="0" step="0.01">
-          </div>
+
           <div class="form-group">
             <label>Preço Unitário (R$)</label>
             <input id="pr-preco" type="number" placeholder="0.00" min="0" step="0.01">
           </div>
+
+          <div class="form-group">
+            <label>Quantidade</label>
+            <input id="pr-qtd" type="number" placeholder="0" min="0" step="0.01">
+          </div>
+
           <div class="form-group full">
             <label>Total Calculado</label>
             <input id="pr-total" readonly placeholder="R$ 0,00"
               style="background:var(--surface2);color:var(--green-dark);font-weight:600;">
           </div>
+
         </div>
       </div>
       <div class="modal-footer">
@@ -274,16 +308,51 @@
   </div>
 
   <!-- ══════════════════════════════════════
+     MODAL — CATÁLOGO PNAE (lista suspensa)
+════════════════════════════════════════ -->
+  <div class="modal-bg" id="modal-catalogo">
+    <div class="modal" style="max-width:680px">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Lista de Produtos PNAE</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">
+            Clique no produto para selecionar — preço e unidade já preenchidos automaticamente
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal('modal-catalogo')">✕</button>
+      </div>
+
+      <!-- Busca rápida dentro do catálogo -->
+      <div style="padding:12px 24px;border-bottom:1px solid var(--border)">
+        <input id="cat-busca" type="text" placeholder="Filtrar produtos..." oninput="filtrarCatalogo(this.value)"
+          style="width:100%">
+      </div>
+
+      <!-- Lista de produtos -->
+      <div id="cat-lista" style="max-height:420px;overflow-y:auto;padding:8px 0"></div>
+
+      <div class="modal-footer" style="justify-content:space-between">
+        <span style="font-size:12px;color:var(--muted)" id="cat-contador">43 produtos</span>
+        <button class="btn btn-secondary" onclick="closeModal('modal-catalogo')">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
      SCRIPTS (ordem de dependências)
 ════════════════════════════════════════ -->
-  <script src="js/auth.js"></script>
+  <!-- utils e helpers primeiro -->
   <script src="js/utils.js"></script>
+  <!-- módulos de página (devem existir antes do router/auth chamarem render) -->
   <script src="js/router.js"></script>
   <script src="js/dashboard.js"></script>
   <script src="js/responsaveis.js"></script>
   <script src="js/projetos.js"></script>
+  <script src="js/catalago.js"></script>
   <script src="js/lancamentos.js"></script>
   <script src="js/pdf.js"></script>
+  <!-- auth por último: dispara onAuthStateChanged → render() -->
+  <script src="js/auth.js"></script>
 
   <script>
     // auth.js chama initModals() e render() após confirmar usuário logado.
