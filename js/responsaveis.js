@@ -4,7 +4,7 @@
 
 const RESP_FIELDS = [
   'nome','cnpj','endereco','municipio','cep',
-  'representante','cpf','telefone','banco','agencia','conta'
+  'telefone','banco','agencia','conta'
 ];
 
 // ── Listagem ──────────────────────────────
@@ -52,7 +52,6 @@ function _cardResponsavel(r, projets) {
       <div class="resp-card-meta">
         ${r.cnpj          ? `CNPJ: ${r.cnpj}<br>`           : ''}
         ${r.municipio     ? r.municipio                      : ''}
-        ${r.representante ? `<br>Rep.: ${r.representante}`  : ''}
       </div>
       <div class="resp-card-actions">
         <button class="btn btn-primary btn-sm"   onclick="abrirResponsavel('${r.id}')">Ver Projetos</button>
@@ -104,8 +103,6 @@ async function renderDetalheResponsavel(id) {
           ${_di('Município',     resp.municipio)}
           ${_di('CEP',           resp.cep)}
           ${_di('Endereço',      resp.endereco)}
-          ${_di('Representante', resp.representante)}
-          ${_di('CPF',           resp.cpf,           true)}
           ${_di('Telefone',      resp.telefone)}
           ${_di('Banco',         resp.banco)}
           ${_di('Agência',       resp.agencia,       true)}
