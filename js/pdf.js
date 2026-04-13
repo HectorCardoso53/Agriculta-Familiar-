@@ -5,22 +5,21 @@
 
 {
   // ── Constantes de layout ──────────────────
-  const MARGIN     = 15;
-  const PAGE_W     = 210;
-  const CONTENT_W  = PAGE_W - MARGIN * 2;
-  const BLUE       = [37, 99, 235];
-  const BLUE_H     = [219, 234, 254];
-  const SUBTOTAL_C = [224, 242, 254];
+  const MARGIN    = 15;
+  const PAGE_W    = 210;
+  const CONTENT_W = PAGE_W - MARGIN * 2; // 180mm
+  const BLUE      = [37, 99, 235];
+  const BLUE_H    = [219, 234, 254];
+  const SUBTOTAL_C= [224, 242, 254];
 
   // ── Cabeçalho de página ───────────────────
   function _header(doc, proj) {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
-    doc.setTextColor(...BLUE);
     doc.text("ANEXO II", PAGE_W / 2, MARGIN + 8, { align: "center" });
 
     doc.setFontSize(9.5);
-    doc.text("PROJETO DE VENDA DE GÊNEROS ALIMENTÍCIOS",  PAGE_W / 2, MARGIN + 14, { align: "center" });
+    doc.text("PROJETO DE VENDA DE GÊNEROS ALIMENTÍCIOS", PAGE_W / 2, MARGIN + 14, { align: "center" });
     doc.text("PROGRAMA NACIONAL DE ALIMENTAÇÃO ESCOLAR",  PAGE_W / 2, MARGIN + 19, { align: "center" });
 
     doc.setFont("helvetica", "normal");
@@ -110,6 +109,7 @@
       doc.autoTable({
         startY: y,
         theme: "grid",
+        tableWidth: CONTENT_W,
         head: [["I – IDENTIFICAÇÃO DO PROPONENTE", ""]],
         body: bodyI,
         headStyles: { fillColor: BLUE, textColor: 255 },
@@ -118,6 +118,7 @@
           0: { cellWidth: 55, fillColor: BLUE_H, fontStyle: "bold", textColor: [0, 0, 0] },
           1: { cellWidth: CONTENT_W - 55, textColor: [0, 0, 0] },
         },
+        margin: { left: MARGIN, right: MARGIN },
       });
 
       const yDados = doc.lastAutoTable.finalY;
@@ -125,16 +126,18 @@
       doc.autoTable({
         startY: yDados,
         theme: "grid",
+        tableWidth: CONTENT_W,
         body: [["Banco", resp.banco || "", "Agência", resp.agencia || "", "Conta", resp.conta || ""]],
         bodyStyles: { textColor: [0, 0, 0] },
         columnStyles: {
           0: { cellWidth: 18, fontStyle: "bold", fillColor: BLUE_H },
-          1: { cellWidth: 62 },
+          1: { cellWidth: 57 },
           2: { cellWidth: 18, fontStyle: "bold", fillColor: BLUE_H },
-          3: { cellWidth: 22 },
+          3: { cellWidth: 27 },
           4: { cellWidth: 15, fontStyle: "bold", fillColor: BLUE_H },
           5: { cellWidth: 45 },
         },
+        margin: { left: MARGIN, right: MARGIN },
       });
 
       y = doc.lastAutoTable.finalY + 8;
@@ -147,9 +150,11 @@
       doc.autoTable({
         startY: y,
         theme: "grid",
+        tableWidth: CONTENT_W,
         head: [[{ content: "II – RELAÇÃO DE FORNECEDORES", colSpan: 6 }]],
         headStyles: { fillColor: BLUE, textColor: 255 },
         body: [],
+        margin: { left: MARGIN, right: MARGIN },
       });
 
       y = doc.lastAutoTable.finalY;
@@ -166,10 +171,12 @@
       doc.autoTable({
         startY: y,
         theme: "grid",
+        tableWidth: CONTENT_W,
         head: [["Fornecedor", "CPF", "CAF", "Banco", "Agência", "Conta"]],
         body: bodyForns,
         headStyles: { fillColor: BLUE, textColor: 255 },
         bodyStyles: { textColor: [0, 0, 0] },
+        margin: { left: MARGIN, right: MARGIN },
       });
 
       y = doc.lastAutoTable.finalY + 8;
@@ -219,6 +226,7 @@
     doc.autoTable({
       startY: y,
       theme: "grid",
+      tableWidth: CONTENT_W,
       head: [["III – IDENTIFICAÇÃO DO AGRICULTOR", "Produto", "Unidade", "Qtd", "Preço", "Total"]],
       body: bodyRows,
       headStyles: { fillColor: BLUE, textColor: 255 },
@@ -231,6 +239,7 @@
         4: { cellWidth: 20, halign: "right" },
         5: { cellWidth: 24, halign: "right" },
       },
+      margin: { left: MARGIN, right: MARGIN },
     });
 
     // ──────────────────────────────────────
@@ -242,6 +251,7 @@
     doc.autoTable({
       startY: yIV,
       theme: "grid",
+      tableWidth: CONTENT_W,
       head: [[{ content: "IV – TOTALIZAÇÃO POR PRODUTO", colSpan: 6, styles: { halign: "center" } }]],
       body: totais.map((t, i) => [
         i + 1,
@@ -261,6 +271,7 @@
         4: { cellWidth: 20, halign: "right" },
         5: { cellWidth: 26, halign: "right" },
       },
+      margin: { left: MARGIN, right: MARGIN },
     });
 
     // ──────────────────────────────────────
@@ -271,13 +282,12 @@
     doc.autoTable({
       startY: yV,
       theme: "grid",
-      head: [[{
-        content: "V – MECANISMOS DE ACOMPANHAMENTO DAS ENTREGAS DOS PRODUTOS",
-        colSpan: 1,
-      }]],
+      tableWidth: CONTENT_W,
+      head: [[{ content: "V – MECANISMOS DE ACOMPANHAMENTO DAS ENTREGAS DOS PRODUTOS" }]],
       body: [[{ content: proj && proj.mecanismos ? proj.mecanismos : "" }]],
       headStyles: { fillColor: BLUE, textColor: 255 },
-      bodyStyles: { textColor: [0, 0, 0], minCellHeight: 30 },
+      columnStyles: { 0: { cellWidth: CONTENT_W } },
+      margin: { left: MARGIN, right: MARGIN },
     });
 
     // ──────────────────────────────────────
@@ -288,16 +298,14 @@
     doc.autoTable({
       startY: yVI,
       theme: "grid",
-      head: [[{
-        content: "VI – IDENTIFICAÇÃO DA ENTIDADE EXECUTORA DO PNAE/FNDE/MEC",
-        colSpan: 3,
-      }]],
+      tableWidth: CONTENT_W,
+      head: [[{ content: "VI – IDENTIFICAÇÃO DA ENTIDADE EXECUTORA DO PNAE/FNDE/MEC", colSpan: 3 }]],
       headStyles: { fillColor: BLUE, textColor: 255, halign: "center" },
       body: [
         [
-          { content: "1. Nome da Entidade:\nMUNICÍPIO DE ORIXIMINÁ/PA –\nSECRETARIA MUNICIPAL DE EDUCAÇÃO", styles: { cellWidth: 90, textColor: [0, 0, 0] } },
-          { content: "2. CNPJ\n06.102.908/0001-92",   styles: { cellWidth: 50, halign: "center", textColor: [0, 0, 0] } },
-          { content: "3. Município\nOriximiná/PA",     styles: { cellWidth: 50, halign: "center", textColor: [0, 0, 0] } },
+          { content: "1. Nome da Entidade:\nMUNICÍPIO DE ORIXIMINÁ/PA –\nSECRETARIA MUNICIPAL DE EDUCAÇÃO", styles: { textColor: [0, 0, 0] } },
+          { content: "2. CNPJ\n06.102.908/0001-92",   styles: { halign: "center", textColor: [0, 0, 0] } },
+          { content: "3. Município\nOriximiná/PA",     styles: { halign: "center", textColor: [0, 0, 0] } },
         ],
         [{ content: "4. Endereço: Travessa Carlos Maria Teixeira, nº 785",                                        colSpan: 3, styles: { textColor: [0, 0, 0] } }],
         [{ content: "6. Nome do representante: Ivana Maria Pereira de Souza – Secretária Municipal de Educação.", colSpan: 3, styles: { textColor: [0, 0, 0] } }],
@@ -305,8 +313,9 @@
       columnStyles: {
         0: { cellWidth: 90 },
         1: { cellWidth: 50 },
-        2: { cellWidth: 50 },
+        2: { cellWidth: 40 }, // 90+50+40 = 180 = CONTENT_W
       },
+      margin: { left: MARGIN, right: MARGIN },
     });
 
     _footers(doc);

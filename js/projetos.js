@@ -92,23 +92,24 @@ async function abrirModalProj(respId) {
       ).join('')
     : '<option value="">— Nenhum responsável —</option>';
 
-  document.getElementById('p-nome').value = '';
-  document.getElementById('p-data').value = new Date().toISOString().split('T')[0];
-  document.getElementById('p-mecanismos').value = ''; // ← adicione
+  document.getElementById('p-nome').value       = '';
+  document.getElementById('p-data').value       = new Date().toISOString().split('T')[0];
+  document.getElementById('p-mecanismos').value = '';
   openModal('modal-proj');
 }
 
 async function salvarProjeto() {
-  const nome = document.getElementById('p-nome').value.trim();
-  const resp = document.getElementById('p-resp').value;
-  const data = document.getElementById('p-data').value;
+  const nome       = document.getElementById('p-nome').value.trim();
+  const resp       = document.getElementById('p-resp').value;
+  const data       = document.getElementById('p-data').value;
+  const mecanismos = document.getElementById('p-mecanismos').value.trim(); // ← captura
 
   if (!nome) { alert('Informe o nome do projeto.'); return; }
   if (!resp) { alert('Selecione um responsável.'); return; }
 
   try {
     const id = uid();
-    await saveDoc('projetos', id, { responsavelId: resp, nome, data });
+    await saveDoc('projetos', id, { responsavelId: resp, nome, data, mecanismos }); // ← salva
     closeModal('modal-proj');
     showToast('Projeto salvo!');
 
