@@ -165,7 +165,15 @@
             resp.conta || "",
           ],
         ],
-        bodyStyles: { textColor: [0, 0, 0] }, // ← preto
+        bodyStyles: { textColor: [0, 0, 0] },
+        columnStyles: {
+          0: { cellWidth: 18, fontStyle: "bold", fillColor: BLUE_H },  // "Banco"
+          1: { cellWidth: 62 },                                         // valor banco
+          2: { cellWidth: 18, fontStyle: "bold", fillColor: BLUE_H },  // "Agência"
+          3: { cellWidth: 22 },                                         // valor agência
+          4: { cellWidth: 15, fontStyle: "bold", fillColor: BLUE_H },  // "Conta"
+          5: { cellWidth: 45 },                                         // valor conta
+        },
       });
 
       y = doc.lastAutoTable.finalY + 8;
@@ -262,12 +270,12 @@
       headStyles: { fillColor: BLUE, textColor: 255 },
       bodyStyles: { textColor: [0, 0, 0] }, // ← preto
       columnStyles: {
-        0: { cellWidth: 45, valign: "middle", halign: "center" },
-        1: { cellWidth: 55 },
-        2: { cellWidth: 18, halign: "center" },
-        3: { cellWidth: 18, halign: "right" },
-        4: { cellWidth: 22, halign: "right" },
-        5: { cellWidth: 22, halign: "right" },
+        0: { cellWidth: 38, valign: "middle", halign: "center" }, // Agricultor — diminuiu (−7)
+        1: { cellWidth: 70 },                                      // Produto    — aumentou (+15)
+        2: { cellWidth: 13, halign: "center" },                    // Unidade    — diminuiu (−5)
+        3: { cellWidth: 15, halign: "right" },                     // Qtd        — diminuiu (−3)
+        4: { cellWidth: 20, halign: "right" },                     // Preço      — diminuiu (−2)
+        5: { cellWidth: 24, halign: "right" },                     // Total      — aumentou (+2) para R$ não quebrar
       },
     });
 
@@ -280,7 +288,9 @@
     doc.autoTable({
       startY: yIV,
       theme: "grid",
-      head: [["IV – TOTALIZAÇÃO POR PRODUTO", "", "", "", "", ""]],
+      head: [[
+        { content: "IV – TOTALIZAÇÃO POR PRODUTO", colSpan: 6, styles: { halign: "center" } },
+      ]],
       body: totais.map((t, i) => [
         i + 1,
         t.produto,
@@ -291,6 +301,14 @@
       ]),
       headStyles: { fillColor: BLUE, textColor: 255 },
       bodyStyles: { textColor: [0, 0, 0] }, // ← preto
+      columnStyles: {
+        0: { cellWidth: 10, halign: "center" },  // Nº     — compacto
+        1: { cellWidth: 96 },                    // Produto — bem largo
+        2: { cellWidth: 13, halign: "center" },  // Unidade — compacto
+        3: { cellWidth: 15, halign: "right" },   // Qtd
+        4: { cellWidth: 20, halign: "right" },   // Preço
+        5: { cellWidth: 26, halign: "right" },   // Total
+      },
     });
 
     // ──────────────────────────────────────
