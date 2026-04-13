@@ -94,6 +94,7 @@ async function abrirModalProj(respId) {
 
   document.getElementById('p-nome').value = '';
   document.getElementById('p-data').value = new Date().toISOString().split('T')[0];
+  document.getElementById('p-mecanismos').value = ''; // ← adicione
   openModal('modal-proj');
 }
 
