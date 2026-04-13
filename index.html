@@ -220,23 +220,50 @@
         <div class="modal-title">Novo Fornecedor</div>
         <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal('modal-forn')">✕</button>
       </div>
+
       <div class="modal-body">
         <div class="form-grid cols-2">
+
           <div class="form-group full">
             <label>Nome do Agricultor / Fornecedor</label>
             <input id="f-nome" placeholder="Nome completo">
           </div>
-          <div class="form-group"><label>CPF</label><input id="f-cpf" placeholder="000.000.000-00"></div>
-          <div class="form-group"><label>DAP</label><input id="f-dap" placeholder="Número da DAP"></div>
+
+          <div class="form-group">
+            <label>CPF</label>
+            <input id="f-cpf" placeholder="000.000.000-00">
+          </div>
+
+          <div class="form-group">
+            <label>CAF</label>
+            <input id="f-dap" placeholder="Número da CAF">
+          </div>
+
+          <!-- 🔥 NOVOS CAMPOS -->
+          <div class="form-group">
+            <label>Banco</label>
+            <input id="f-banco" placeholder="Nome do banco">
+          </div>
+
+          <div class="form-group">
+            <label>Agência</label>
+            <input id="f-agencia" placeholder="0000-0">
+          </div>
+
+          <div class="form-group">
+            <label>Conta</label>
+            <input id="f-conta" placeholder="00000-0">
+          </div>
+
         </div>
       </div>
+
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal('modal-forn')">Cancelar</button>
         <button class="btn btn-primary" onclick="salvarFornecedor()">Salvar</button>
       </div>
     </div>
   </div>
-
   <!-- ══════════════════════════════════════
      MODAL — PRODUTO
 ════════════════════════════════════════ -->

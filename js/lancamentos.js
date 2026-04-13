@@ -114,22 +114,31 @@ function _blocoFornecedor(f, prods) {
       <div class="fornecedor-block-header" onclick="toggleForn('${f.id}')">
         <div>
           <strong>${f.nome}</strong>
-          <span class="text-muted text-sm" style="margin-left:10px">
-            CPF: ${f.cpf || '—'} · DAP: ${f.dap || '—'}
-          </span>
+
+          <div class="text-muted text-sm" style="margin-top:4px">
+            CPF: ${f.cpf || '—'} · DAP: ${f.dap || '—'}<br>
+            Banco: ${f.banco || '—'} · Ag: ${f.agencia || '—'} · Conta: ${f.conta || '—'}
+          </div>
         </div>
+
         <div class="flex items-center gap-8">
           <span class="badge badge-green font-mono">${fmt(tf)}</span>
+
           <button class="btn btn-primary btn-sm"
             onclick="event.stopPropagation();abrirModalProd('${f.id}','${state.projetoSelecionado}')">
             + Produto
           </button>
+
           <button class="btn btn-danger btn-sm"
             onclick="event.stopPropagation();excluirFornecedor('${f.id}')">✕</button>
         </div>
       </div>
+
       <div class="fornecedor-block-body" id="forn-body-${f.id}">
-        ${ps.length ? _tabelaProdutos(ps) : `<p class="text-muted text-sm">Nenhum produto. Clique em "+ Produto" para adicionar.</p>`}
+        ${ps.length
+          ? _tabelaProdutos(ps)
+          : `<p class="text-muted text-sm">Nenhum produto. Clique em "+ Produto" para adicionar.</p>`
+        }
       </div>
     </div>`;
 }
@@ -181,20 +190,37 @@ function abrirModalForn(pid) {
 }
 
 async function salvarFornecedor() {
-  const nome = document.getElementById('f-nome').value.trim();
-  if (!nome) { alert('Informe o nome do fornecedor.'); return; }
+  const nome     = document.getElementById('f-nome').value.trim();
+  const cpf      = document.getElementById('f-cpf').value.trim();
+  const dap      = document.getElementById('f-dap').value.trim();
+
+  const banco    = document.getElementById('f-banco').value.trim();
+  const agencia  = document.getElementById('f-agencia').value.trim();
+  const conta    = document.getElementById('f-conta').value.trim();
+
+  // 🔴 validação mínima (sem isso vira bagunça depois)
+  if (!nome) {
+    alert('Informe o nome do fornecedor.');
+    return;
+  }
 
   try {
     const id = uid();
+
     await saveDoc('fornecedores', id, {
       projetoId: state.projetoSelecionado,
       nome,
-      cpf: document.getElementById('f-cpf').value.trim(),
-      dap: document.getElementById('f-dap').value.trim(),
+      cpf,
+      dap,
+      banco,
+      agencia,
+      conta
     });
+
     closeModal('modal-forn');
     showToast('Fornecedor adicionado!');
     renderLancamentos();
+
   } catch (e) {
     console.error(e);
     showToast('Erro ao salvar fornecedor.', 'error');

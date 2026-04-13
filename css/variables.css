@@ -12,10 +12,10 @@
 
 :root {
   /* Paleta principal (AGORA AZUL) */
-  --green:        #2c3e50;   /* azul principal */
+  --green:        #143b71;   /* azul principal */
   --green-light:  #dbeafe;   /* azul claro */
   --green-mid:    #3b82f6;   /* azul médio */
-  --green-dark:   #2c3e50;   /* azul escuro */
+  --green-dark:   #143b71;   /* azul escuro */
 
   /* Paleta secundária */
   --amber:        #c97a1a;
