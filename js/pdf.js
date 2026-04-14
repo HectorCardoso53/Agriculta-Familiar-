@@ -259,7 +259,7 @@
       { content: fmt(grandTotal), styles: { fillColor: BLUE, textColor: 255, fontStyle: "bold", halign: "right" } },
     ]);
     bodyIV.push([
-      { content: `Por extenso: ${_extenso(grandTotal)}`, colSpan: 6, styles: { fontStyle: "italic", textColor: [0, 0, 0] } },
+      { content: `Valor por extenso: ${_extenso(grandTotal)}`, colSpan: 6, styles: { fontStyle: "italic", textColor: [0, 0, 0] } },
     ]);
 
     doc.autoTable({
