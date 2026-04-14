@@ -419,66 +419,43 @@
       doc.text(label || "Carimbo e Assinatura do Representante Legal", cx, y + 5, { align: "center" });
     }
 
-    // ── DECLARAÇÃO A ─────────────────────
+    // ── FOLHA 1: DECLARAÇÕES A + B ──────────
     doc.addPage();
+
+    // A
     let yA = _cabecalhoAnexo(doc, "A", "DECLARAÇÃO", null);
     yA += 6;
-
     const textoA = `${nome} (CPF/CNPJ: ${cnpj}), residente/sediado(a) em ${local}, declara para os devidos fins que os gêneros alimentícios a serem entregues são oriundos de produção própria (para Fornecedor Individual) são produzidos pelos agricultores familiares (para Grupo Informal) ou são produzidos pelos associados (para o Grupo Formal) relacionados no Projeto de Venda.`;
     yA = _bloco(doc, textoA, yA);
-
     yA += 10;
     doc.setFont("helvetica", "normal");
     doc.setFontSize(FS);
-    doc.text("E, por ser expressão da verdade, firma a presente Declaração.", PAGE_W / 2, yA, { align: "center" });
+    doc.text("E, por ser expressão da verdade, firma a presente Declaração.", ML + ABNT_W / 2, yA, { align: "center" });
+    yA += 20;
 
-    yA += 30;
-    doc.setFontSize(9);
-    doc.text(`${local}, _____de_______________________de 20XX.`, ML, yA);
-    _assinatura(doc, yA + 20, "Assinatura do Fornecedor Individual, Grupo Informal ou Grupo Formal");
-
-    // ── DECLARAÇÃO B ─────────────────────
-    doc.addPage();
-    let yB = _cabecalhoAnexo(doc, "B",
-      "DECLARAÇÃO DE CUMPRIMENTO AO DISPOSTO NO INCISO XXXIII",
-      "DO ARTIGO 7º DA CONSTITUIÇÃO FEDERAL");
+    // B — continua na mesma página
+    let yB = _titulo(doc, "B)   DECLARAÇÃO DE CUMPRIMENTO AO DISPOSTO NO INCISO XXXIII", "DO ARTIGO 7º DA CONSTITUIÇÃO FEDERAL", yA);
     yB += 6;
-
     const textoB = `${nome}, inscrita no CPF/CNPJ n.º ${cnpj}, por intermédio de seu representante legal, Sr.(a) ______________________________, portador(a) da Carteira de Identidade n.º __________________ CPF n.º _______________________ DECLARA, para fins do disposto no inciso VI, do art. 68, da Lei 14.133/21, e inciso XXXIII do art. 7º da Constituição Federal, que não emprega menor de dezoito anos em trabalho noturno, perigoso ou insalubre e não emprega menor de dezesseis anos. Ressalva: Emprega menor, a partir de quatorze anos, na condição de aprendiz ( ). (Observação: em caso afirmativo, assinalar a ressalva acima).`;
     yB = _bloco(doc, textoB, yB);
 
-    yB += 16;
-    doc.setFontSize(9);
-    doc.text(`${local}, _____de_______________________de 20XX.`, ML, yB);
-    _assinatura(doc, yB + 20);
-
-    // ── DECLARAÇÃO C ─────────────────────
+    // ── FOLHA 2: DECLARAÇÕES C + D ──────────
     doc.addPage();
+
+    // C
     let yC = _cabecalhoAnexo(doc, "C",
       "DECLARAÇÃO DE SUJEIÇÃO AO EDITAL E DE INEXISTÊNCIA DE",
       "FATOS SUPERVENIENTES IMPEDITIVOS DA QUALIFICAÇÃO");
     yC += 6;
-
     const textoC = `O signatário da presente, em nome da proponente ${nome}, declara concordar com os termos da Licitação modalidade Chamada Pública nº XXX/20XX, supramencionado e dos respectivos anexos e documentos, que a mesma acatará integralmente qualquer decisão que venha a ser tomada pelo licitador quanto à qualificação apenas das proponentes que hajam atendido às condições estabelecidas e demonstrem integral possibilidade de executar o(s) fornecimento(s) previsto(s). O signatário da presente declara, também, em nome da referida proponente, total concordância com a decisão que venha a ser tomada quanto a adjudicação, objeto do presente edital. Declara, ainda, para todos os fins de direito a inexistência de fatos supervenientes impeditivos da qualificação ou que comprometam a idoneidade da proponente nos termos da Lei n.º 14.133/21 e suas alterações.`;
     yC = _bloco(doc, textoC, yC);
+    yC += 20;
 
-    yC += 16;
-    doc.setFontSize(9);
-    doc.text(`${local}, _____de_______________________de 20XX.`, ML, yC);
-    _assinatura(doc, yC + 20);
-
-    // ── DECLARAÇÃO D ─────────────────────
-    doc.addPage();
-    let yD = _cabecalhoAnexo(doc, "D", "DECLARAÇÃO DE IDONEIDADE", null);
+    // D — continua na mesma página
+    let yD = _titulo(doc, "D)   DECLARAÇÃO DE IDONEIDADE", null, yC);
     yD += 6;
-
     const textoD = `Declaramos para os devidos fins de direito, na qualidade de Proponente do procedimento licitatório, sob a modalidade de Chamada Pública n.º XXX/20XX, instaurado pelo Município de Oriximiná/PA, que não fomos declarados inidôneos para licitar ou contratar com o Poder Público, em qualquer de suas esferas. Por ser expressão da verdade, firmamos o presente.`;
     yD = _bloco(doc, textoD, yD);
-
-    yD += 16;
-    doc.setFontSize(9);
-    doc.text(`${local}, _____de_______________________de 20XX.`, ML, yD);
-    _assinatura(doc, yD + 20);
 
     _footers(doc);
     return doc;
