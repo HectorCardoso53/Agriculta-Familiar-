@@ -115,3 +115,31 @@ function showToast(msg, tipo = "success") {
     el.style.transform = "translateY(8px)";
   }, 3000);
 }
+
+// ── Máscaras de input ─────────────────────
+function _aplicarMascara(id, fn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', function () {
+    const pos = this.selectionStart;
+    this.value = fn(this.value);
+  });
+}
+
+function _mCPF(v)     { return v.replace(/\D/g,'').slice(0,11).replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2'); }
+function _mCNPJ(v)    { return v.replace(/\D/g,'').slice(0,14).replace(/(\d{2})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1/$2').replace(/(\d{4})(\d{1,2})$/,'$1-$2'); }
+function _mTel(v)     { v=v.replace(/\D/g,'').slice(0,11); return v.length<=10 ? v.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3') : v.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3'); }
+function _mCEP(v)     { return v.replace(/\D/g,'').slice(0,8).replace(/(\d{5})(\d{1,3})$/,'$1-$2'); }
+function _mAgencia(v) { return v.replace(/\D/g,'').slice(0,5).replace(/(\d{4})(\d{1})$/,'$1-$2'); }
+function _mConta(v)   { return v.replace(/\D/g,'').slice(0,9).replace(/(\d{1,8})(\d{1})$/,'$1-$2'); }
+
+function initMascaras() {
+  _aplicarMascara('r-cnpj',     _mCNPJ);
+  _aplicarMascara('r-cep',      _mCEP);
+  _aplicarMascara('r-telefone', _mTel);
+  _aplicarMascara('r-agencia',  _mAgencia);
+  _aplicarMascara('r-conta',    _mConta);
+  _aplicarMascara('f-cpf',      _mCPF);
+  _aplicarMascara('f-agencia',  _mAgencia);
+  _aplicarMascara('f-conta',    _mConta);
+}

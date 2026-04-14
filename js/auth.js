@@ -45,6 +45,7 @@
 
     // Inicializa o sistema após confirmar autenticação
     initModals();
+    initMascaras();
     render();
   });
 })();
