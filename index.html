@@ -156,25 +156,82 @@
       </div>
       <div class="modal-body">
         <div class="form-grid cols-2">
+
           <div class="form-group full">
-            <label>Nome / Razão Social</label>
-            <input id="r-nome" placeholder="Nome completo ou razão social">
+            <label>Nome / Razão Social <span style="color:var(--red)">*</span></label>
+            <input id="r-nome" placeholder="Nome completo ou razão social" required>
           </div>
-          <div class="form-group"><label>CNPJ</label><input id="r-cnpj" placeholder="00.000.000/0000-00"></div>
-          <div class="form-group"><label>CEP</label><input id="r-cep" placeholder="00000-000"></div>
-          <div class="form-group full"><label>Endereço</label><input id="r-endereco" placeholder="Rua, número, bairro">
+
+          <!-- CPF ou CNPJ toggle -->
+          <div class="form-group full">
+            <label id="r-doc-label">
+              <span id="r-doc-tipo-label">CNPJ</span>
+              <span style="color:var(--red)">*</span>
+              <span style="margin-left:10px;font-size:12px;font-weight:400">
+                <label style="cursor:pointer">
+                  <input type="radio" name="r-doc-tipo" value="cnpj" checked onchange="toggleDocTipo('r','cnpj')"> CNPJ
+                </label>
+                &nbsp;
+                <label style="cursor:pointer">
+                  <input type="radio" name="r-doc-tipo" value="cpf" onchange="toggleDocTipo('r','cpf')"> CPF
+                </label>
+              </span>
+            </label>
+            <input id="r-cnpj" placeholder="00.000.000/0000-00" required>
           </div>
-          <div class="form-group"><label>Município / UF</label><input id="r-municipio" placeholder="Município — UF">
+
+          <div class="form-group">
+            <label>CEP <span style="color:var(--red)">*</span></label>
+            <input id="r-cep" placeholder="00000-000" required>
           </div>
-          <div class="form-group"><label>Telefone</label><input id="r-telefone" placeholder="(00) 00000-0000"></div>
-          <div class="form-group"><label>Banco</label><input id="r-banco" placeholder="Nome do banco"></div>
-          <div class="form-group"><label>Agência</label><input id="r-agencia" placeholder="0000-0"></div>
-          <div class="form-group"><label>Conta</label><input id="r-conta" placeholder="00000-0"></div>
+
+          <div class="form-group full">
+            <label>Endereço <span style="color:var(--red)">*</span></label>
+            <input id="r-endereco" placeholder="Rua, número, bairro" required>
+          </div>
+
+          <div class="form-group">
+            <label>Município / UF <span style="color:var(--red)">*</span></label>
+            <input id="r-municipio" placeholder="Município — UF" required>
+          </div>
+
+          <div class="form-group">
+            <label>Telefone <span style="color:var(--red)">*</span></label>
+            <input id="r-telefone" placeholder="(00) 00000-0000" required>
+          </div>
+
+          <div class="form-group">
+            <label>Banco <span style="color:var(--red)">*</span></label>
+            <input id="r-banco" placeholder="Nome do banco" required>
+          </div>
+
+          <div class="form-group">
+            <label>Agência <span style="color:var(--red)">*</span></label>
+            <input id="r-agencia" placeholder="0000-0" required>
+          </div>
+
+          <div class="form-group">
+            <label>Conta <span style="color:var(--red)">*</span></label>
+            <input id="r-conta" placeholder="00000-0" required>
+          </div>
+
+          <div class="form-group full">
+            <label>Características do Fornecedor Proponente</label>
+            <textarea id="r-caracteristicas" rows="3"
+              placeholder="Breve histórico, número de sócios, missão, área de abrangência..."
+              style="resize:vertical; min-height:70px; overflow-y:hidden;"
+              oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'">
+          </textarea>
+          </div>
+
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-resp')">Cancelar</button>
-        <button class="btn btn-primary" onclick="salvarResponsavel()">Salvar</button>
+        <span style="font-size:11px;color:var(--muted)"><span style="color:var(--red)">*</span> Obrigatório</span>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-secondary" onclick="closeModal('modal-resp')">Cancelar</button>
+          <button class="btn btn-primary" onclick="salvarResponsavel()">Salvar</button>
+        </div>
       </div>
     </div>
   </div>
@@ -190,31 +247,39 @@
       </div>
       <div class="modal-body">
         <div class="form-grid cols-2">
+
           <div class="form-group full">
-            <label>Nome do Projeto</label>
-            <input id="p-nome" placeholder="Ex: Projeto Hortifrúti 2025">
+            <label>Nome do Projeto <span style="color:var(--red)">*</span></label>
+            <input id="p-nome" placeholder="Ex: Projeto Hortifrúti 2025" required>
           </div>
+
           <div class="form-group">
-            <label>Responsável</label>
-            <div class="select-wrap"><select id="p-resp"></select></div>
+            <label>Responsável <span style="color:var(--red)">*</span></label>
+            <div class="select-wrap"><select id="p-resp" required></select></div>
           </div>
+
+          <div class="form-group">
+            <label>Data <span style="color:var(--red)">*</span></label>
+            <input id="p-data" type="date" required>
+          </div>
+
           <div class="form-group full">
             <label>Mecanismos de Acompanhamento das Entregas</label>
             <textarea id="p-mecanismos" rows="2"
               placeholder="Descreva os mecanismos de acompanhamento das entregas dos produtos..."
               style="resize:vertical; min-height:60px; overflow-y:hidden;"
               oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'">
-  </textarea>
+          </textarea>
           </div>
-          <div class="form-group">
-            <label>Data</label>
-            <input id="p-data" type="date">
-          </div>
+
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-proj')">Cancelar</button>
-        <button class="btn btn-primary" onclick="salvarProjeto()">Salvar</button>
+        <span style="font-size:11px;color:var(--muted)"><span style="color:var(--red)">*</span> Obrigatório</span>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-secondary" onclick="closeModal('modal-proj')">Cancelar</button>
+          <button class="btn btn-primary" onclick="salvarProjeto()">Salvar</button>
+        </div>
       </div>
     </div>
   </div>
@@ -228,50 +293,64 @@
         <div class="modal-title">Novo Fornecedor</div>
         <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal('modal-forn')">✕</button>
       </div>
-
       <div class="modal-body">
         <div class="form-grid cols-2">
 
           <div class="form-group full">
-            <label>Nome do Agricultor / Fornecedor</label>
-            <input id="f-nome" placeholder="Nome completo">
+            <label>Nome do Agricultor / Fornecedor <span style="color:var(--red)">*</span></label>
+            <input id="f-nome" placeholder="Nome completo" required>
+          </div>
+
+          <!-- CPF ou CNPJ toggle -->
+          <div class="form-group">
+            <label id="f-doc-label">
+              <span id="f-doc-tipo-label">CPF</span>
+              <span style="color:var(--red)">*</span>
+              <span style="margin-left:8px;font-size:12px;font-weight:400">
+                <label style="cursor:pointer">
+                  <input type="radio" name="f-doc-tipo" value="cpf" checked onchange="toggleDocTipo('f','cpf')"> CPF
+                </label>
+                &nbsp;
+                <label style="cursor:pointer">
+                  <input type="radio" name="f-doc-tipo" value="cnpj" onchange="toggleDocTipo('f','cnpj')"> CNPJ
+                </label>
+              </span>
+            </label>
+            <input id="f-cpf" placeholder="000.000.000-00" required>
           </div>
 
           <div class="form-group">
-            <label>CPF</label>
-            <input id="f-cpf" placeholder="000.000.000-00">
+            <label>CAF <span style="color:var(--red)">*</span></label>
+            <input id="f-dap" placeholder="Número da CAF" required>
           </div>
 
           <div class="form-group">
-            <label>CAF</label>
-            <input id="f-dap" placeholder="Número da CAF">
-          </div>
-
-          <!-- 🔥 NOVOS CAMPOS -->
-          <div class="form-group">
-            <label>Banco</label>
-            <input id="f-banco" placeholder="Nome do banco">
+            <label>Banco <span style="color:var(--red)">*</span></label>
+            <input id="f-banco" placeholder="Nome do banco" required>
           </div>
 
           <div class="form-group">
-            <label>Agência</label>
-            <input id="f-agencia" placeholder="0000-0">
+            <label>Agência <span style="color:var(--red)">*</span></label>
+            <input id="f-agencia" placeholder="0000-0" required>
           </div>
 
           <div class="form-group">
-            <label>Conta</label>
-            <input id="f-conta" placeholder="00000-0">
+            <label>Conta <span style="color:var(--red)">*</span></label>
+            <input id="f-conta" placeholder="00000-0" required>
           </div>
 
         </div>
       </div>
-
       <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-forn')">Cancelar</button>
-        <button class="btn btn-primary" onclick="salvarFornecedor()">Salvar</button>
+        <span style="font-size:11px;color:var(--muted)"><span style="color:var(--red)">*</span> Obrigatório</span>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-secondary" onclick="closeModal('modal-forn')">Cancelar</button>
+          <button class="btn btn-primary" onclick="salvarFornecedor()">Salvar</button>
+        </div>
       </div>
     </div>
   </div>
+
   <!-- ══════════════════════════════════════
      MODAL — PRODUTO
 ════════════════════════════════════════ -->
@@ -285,9 +364,9 @@
         <div class="form-grid cols-2">
 
           <div class="form-group full">
-            <label>Produto</label>
+            <label>Produto <span style="color:var(--red)">*</span></label>
             <div class="select-wrap">
-              <select id="pr-select-pnae" onchange="selecionarProdutoPNAESelect(this.value)">
+              <select id="pr-select-pnae" onchange="selecionarProdutoPNAESelect(this.value)" required>
                 <option value="">— Selecione um produto —</option>
               </select>
             </div>
@@ -295,9 +374,9 @@
           </div>
 
           <div class="form-group">
-            <label>Unidade</label>
+            <label>Unidade <span style="color:var(--red)">*</span></label>
             <div class="select-wrap">
-              <select id="pr-unidade">
+              <select id="pr-unidade" required>
                 <option>KG</option>
                 <option>PCT</option>
                 <option>UNID</option>
@@ -314,13 +393,13 @@
           </div>
 
           <div class="form-group">
-            <label>Preço Unitário (R$)</label>
-            <input id="pr-preco" type="number" placeholder="0.00" min="0" step="0.01">
+            <label>Preço Unitário (R$) <span style="color:var(--red)">*</span></label>
+            <input id="pr-preco" type="number" placeholder="0.00" min="0" step="0.01" required>
           </div>
 
           <div class="form-group">
-            <label>Quantidade</label>
-            <input id="pr-qtd" type="number" placeholder="0" min="0" step="0.01">
+            <label>Quantidade <span style="color:var(--red)">*</span></label>
+            <input id="pr-qtd" type="number" placeholder="0" min="0" step="0.01" required>
           </div>
 
           <div class="form-group full">
@@ -332,14 +411,17 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-prod')">Cancelar</button>
-        <button class="btn btn-primary" onclick="salvarProduto()">Salvar</button>
+        <span style="font-size:11px;color:var(--muted)"><span style="color:var(--red)">*</span> Obrigatório</span>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-secondary" onclick="closeModal('modal-prod')">Cancelar</button>
+          <button class="btn btn-primary" onclick="salvarProduto()">Salvar</button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ══════════════════════════════════════
-     MODAL — CATÁLOGO PNAE (lista suspensa)
+     MODAL — CATÁLOGO PNAE
 ════════════════════════════════════════ -->
   <div class="modal-bg" id="modal-catalogo">
     <div class="modal" style="max-width:680px">
@@ -352,16 +434,11 @@
         </div>
         <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal('modal-catalogo')">✕</button>
       </div>
-
-      <!-- Busca rápida dentro do catálogo -->
       <div style="padding:12px 24px;border-bottom:1px solid var(--border)">
         <input id="cat-busca" type="text" placeholder="Filtrar produtos..." oninput="filtrarCatalogo(this.value)"
           style="width:100%">
       </div>
-
-      <!-- Lista de produtos -->
       <div id="cat-lista" style="max-height:420px;overflow-y:auto;padding:8px 0"></div>
-
       <div class="modal-footer" style="justify-content:space-between">
         <span style="font-size:12px;color:var(--muted)" id="cat-contador">43 produtos</span>
         <button class="btn btn-secondary" onclick="closeModal('modal-catalogo')">Fechar</button>
@@ -369,6 +446,37 @@
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════
+     SCRIPT — Toggle CPF/CNPJ
+════════════════════════════════════════ -->
+  <script>
+    function toggleDocTipo(prefixo, tipo) {
+      // Pega o input pelo id atual (pode ser -cnpj ou -cpf)
+      const input = document.getElementById(prefixo + '-cnpj')
+        || document.getElementById(prefixo + '-cpf');
+      const label = document.getElementById(prefixo + '-doc-tipo-label');
+      if (!input || !label) return;
+
+      input.value = '';
+
+      if (tipo === 'cnpj') {
+        input.id = prefixo + '-cnpj';
+        input.placeholder = '00.000.000/0000-00';
+        label.textContent = 'CNPJ';
+        // remove listener antigo trocando o elemento por clone
+        const clone = input.cloneNode(true);
+        input.parentNode.replaceChild(clone, input);
+        _aplicarMascara(prefixo + '-cnpj', _mCNPJ);
+      } else {
+        input.id = prefixo + '-cpf';
+        input.placeholder = '000.000.000-00';
+        label.textContent = 'CPF';
+        const clone = input.cloneNode(true);
+        input.parentNode.replaceChild(clone, input);
+        _aplicarMascara(prefixo + '-cpf', tipo === 'cpf' && prefixo === 'r' ? _mCPF : _mCPF);
+      }
+    }
+  </script>
   <!-- ══════════════════════════════════════
      SCRIPTS (ordem de dependências)
 ════════════════════════════════════════ -->

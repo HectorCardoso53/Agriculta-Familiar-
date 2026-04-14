@@ -2,11 +2,6 @@
 //  js/responsaveis.js — CRUD de Responsáveis
 // ═══════════════════════════════════════════
 
-const RESP_FIELDS = [
-  'nome','cnpj','endereco','municipio','cep',
-  'telefone','banco','agencia','conta'
-];
-
 // ── Listagem ──────────────────────────────
 
 async function renderResponsaveis() {
@@ -44,14 +39,15 @@ async function renderResponsaveis() {
 }
 
 function _cardResponsavel(r, projets) {
-  const nProj = projets.filter(p => p.responsavelId === r.id).length;
+  const nProj  = projets.filter(p => p.responsavelId === r.id).length;
+  const docLabel = (r.docTipo === 'cpf' ? 'CPF' : 'CNPJ');
   return `
     <div class="resp-card">
       <div class="resp-card-badge">${nProj} proj.</div>
       <div class="resp-card-name">${r.nome}</div>
       <div class="resp-card-meta">
-        ${r.cnpj          ? `CNPJ: ${r.cnpj}<br>`           : ''}
-        ${r.municipio     ? r.municipio                      : ''}
+        ${r.cnpj      ? `${docLabel}: ${r.cnpj}<br>` : ''}
+        ${r.municipio ? r.municipio                   : ''}
       </div>
       <div class="resp-card-actions">
         <button class="btn btn-primary btn-sm"   onclick="abrirResponsavel('${r.id}')">Ver Projetos</button>
@@ -84,6 +80,8 @@ async function renderDetalheResponsavel(id) {
   const meusProjetos = projets.filter(p => p.responsavelId === id);
   document.getElementById('breadcrumb').textContent = `Responsáveis › ${resp.nome}`;
 
+  const docLabel = resp.docTipo === 'cpf' ? 'CPF' : 'CNPJ';
+
   document.getElementById('content').innerHTML = `
     <div class="back-btn" onclick="renderResponsaveis()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -99,14 +97,15 @@ async function renderDetalheResponsavel(id) {
       </div>
       <div class="card-body">
         <div class="form-grid cols-3">
-          ${_di('CNPJ',          resp.cnpj,          true)}
-          ${_di('Município',     resp.municipio)}
-          ${_di('CEP',           resp.cep)}
-          ${_di('Endereço',      resp.endereco)}
-          ${_di('Telefone',      resp.telefone)}
-          ${_di('Banco',         resp.banco)}
-          ${_di('Agência',       resp.agencia,       true)}
-          ${_di('Conta',         resp.conta,         true)}
+          ${_di(docLabel,       resp.cnpj,          true)}
+          ${_di('Município',    resp.municipio)}
+          ${_di('CEP',          resp.cep)}
+          ${_di('Endereço',     resp.endereco)}
+          ${_di('Telefone',     resp.telefone)}
+          ${_di('Banco',        resp.banco)}
+          ${_di('Agência',      resp.agencia,        true)}
+          ${_di('Conta',        resp.conta,          true)}
+          ${resp.caracteristicas ? _di('Características', resp.caracteristicas) : ''}
         </div>
       </div>
     </div>
@@ -161,7 +160,7 @@ function _cardProjetoDetalhe(p, respId, ferns, prods) {
     </div>`;
 }
 
-// ── Modal salvar ──────────────────────────
+// ── Modal abrir ───────────────────────────
 
 function abrirModalResp(id) {
   state.editandoResp = id || null;
@@ -169,22 +168,74 @@ function abrirModalResp(id) {
   const el    = id ? resps.find(r => r.id === id) : null;
 
   document.getElementById('modal-resp-title').textContent = el ? 'Editar Responsável' : 'Novo Responsável';
-  RESP_FIELDS.forEach(f => {
-    document.getElementById('r-' + f).value = el ? (el[f] || '') : '';
+
+  // Campos input simples
+  ['nome','cep','endereco','municipio','telefone','banco','agencia','conta'].forEach(f => {
+    const inp = document.getElementById('r-' + f);
+    if (inp) inp.value = el ? (el[f] || '') : '';
   });
+
+  // Textarea características
+  const carEl = document.getElementById('r-caracteristicas');
+  if (carEl) {
+    carEl.value = el ? (el.caracteristicas || '') : '';
+    carEl.style.height = 'auto';
+    carEl.style.height = carEl.scrollHeight + 'px';
+  }
+
+  // Restaura tipo do documento (CPF ou CNPJ)
+  const docTipo = el ? (el.docTipo || 'cnpj') : 'cnpj';
+
+  // Garante que o input tem o id correto antes de tentar acessar
+  const docInputAtual = document.getElementById('r-cnpj') || document.getElementById('r-cpf');
+  if (docInputAtual) {
+    docInputAtual.id          = 'r-' + docTipo;
+    docInputAtual.placeholder = docTipo === 'cnpj' ? '00.000.000/0000-00' : '000.000.000-00';
+    docInputAtual.value       = el ? (el.cnpj || '') : '';
+  }
+
+  // Atualiza label e radio
+  const labelEl = document.getElementById('r-doc-tipo-label');
+  if (labelEl) labelEl.textContent = docTipo.toUpperCase();
+
+  const radio = document.querySelector(`input[name="r-doc-tipo"][value="${docTipo}"]`);
+  if (radio) radio.checked = true;
+
+  // Re-aplica máscara correta
+  _aplicarMascara('r-' + docTipo, docTipo === 'cnpj' ? _mCNPJ : _mCPF);
+
   openModal('modal-resp');
 }
 
-// Carrega cache para edição sem nova query
 async function editarResponsavel(id) {
   const resps = await load('responsaveis');
   state._cacheResps = resps;
   abrirModalResp(id);
 }
 
+// ── Modal salvar ──────────────────────────
+
 async function salvarResponsavel() {
   const obj = {};
-  RESP_FIELDS.forEach(f => { obj[f] = document.getElementById('r-' + f).value.trim(); });
+
+  // Campos input simples
+  ['nome','cep','endereco','municipio','telefone','banco','agencia','conta'].forEach(f => {
+    const inp = document.getElementById('r-' + f);
+    obj[f] = inp ? inp.value.trim() : '';
+  });
+
+  // CPF ou CNPJ — detecta qual está ativo pelo id
+  const docElCNPJ = document.getElementById('r-cnpj');
+  const docElCPF  = document.getElementById('r-cpf');
+  const docTipo   = docElCNPJ ? 'cnpj' : 'cpf';
+  const docEl     = docElCNPJ || docElCPF;
+  obj.cnpj    = docEl ? docEl.value.trim() : '';
+  obj.docTipo = docTipo;
+
+  // Textarea separado
+  const carEl = document.getElementById('r-caracteristicas');
+  obj.caracteristicas = carEl ? carEl.value.trim() : '';
+
   if (!obj.nome) { alert('Informe o nome do responsável.'); return; }
 
   const id = state.editandoResp || uid();

@@ -274,8 +274,35 @@ function abrirModalProd(fid, pid) {
 }
 
 async function salvarProduto() {
-  const produto = document.getElementById('pr-produto').value.trim();
-  if (!produto) { alert('Informe o produto.'); return; }
+  const produto   = document.getElementById('pr-produto').value.trim();
+  const unidade   = document.getElementById('pr-unidade').value;
+  const quantidade= parseFloat(document.getElementById('pr-qtd').value)   || 0;
+  const preco     = parseFloat(document.getElementById('pr-preco').value)  || 0;
+
+  if (!produto)    { alert('Informe o produto.');    return; }
+  if (!quantidade) { alert('Informe a quantidade.'); return; }
+  if (!preco)      { alert('Informe o preço.');      return; }
+
+  // ── Valida limite de R$ 40.000 por fornecedor ──
+  const prodsExistentes = await load('produtos');
+  const totalAtual = prodsExistentes
+    .filter(p => p.fornecedorId === state.fornecedorSelecionado)
+    .reduce((s, p) => s + ((parseFloat(p.quantidade) || 0) * (parseFloat(p.preco) || 0)), 0);
+
+  const novoValor = quantidade * preco;
+  const novoTotal = totalAtual + novoValor;
+
+  if (novoTotal > 40000) {
+    const disponivel = 40000 - totalAtual;
+    alert(
+      `⚠️ Limite de R$ 40.000,00 excedido!\n\n` +
+      `Subtotal atual deste fornecedor: ${fmt(totalAtual)}\n` +
+      `Este produto adicionaria: ${fmt(novoValor)}\n` +
+      `Total resultante: ${fmt(novoTotal)}\n\n` +
+      `Valor ainda disponível: ${fmt(disponivel > 0 ? disponivel : 0)}`
+    );
+    return;
+  }
 
   try {
     const id = uid();
@@ -283,9 +310,9 @@ async function salvarProduto() {
       projetoId:    state.projetoSelecionado,
       fornecedorId: state.fornecedorSelecionado,
       produto,
-      unidade:      document.getElementById('pr-unidade').value,
-      quantidade:   document.getElementById('pr-qtd').value,
-      preco:        document.getElementById('pr-preco').value,
+      unidade,
+      quantidade,
+      preco,
     });
     closeModal('modal-prod');
     showToast('Produto adicionado!');
