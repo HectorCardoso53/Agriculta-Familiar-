@@ -227,14 +227,6 @@
       ]);
     });
 
-    bodyRows.push([
-      { content: "TOTAL GERAL", colSpan: 5, styles: { fillColor: BLUE, textColor: 255, fontStyle: "bold", halign: "right" } },
-      { content: fmt(grandTotal), styles: { fillColor: BLUE, textColor: 255, fontStyle: "bold", halign: "right" } },
-    ]);
-    bodyRows.push([
-      { content: `Por extenso: ${_extenso(grandTotal)}`, colSpan: 6, styles: { fontStyle: "italic", textColor: [0, 0, 0] } },
-    ]);
-
     doc.autoTable({
       startY: y, theme: "grid", tableWidth: CONTENT_W,
       head: [
