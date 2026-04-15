@@ -382,7 +382,7 @@
     doc.addPage();
     let yA = _cabecalhoAnexo(doc, "A", "DECLARAÇÃO", null);
     yA += 6;
-    const textoA = `${nome} (CPF/CNPJ: ${cnpj}), residente/sediado(a) em ${local}, declara para os devidos fins que os gêneros alimentícios a serem entregues são oriundos de produção própria (para Fornecedor Individual) são produzidos pelos agricultores familiares (para Grupo Informal) ou são produzidos pelos associados (para o Grupo Formal) relacionados no Projeto de Venda. E, por ser expressão da verdade, firma a presente Declaração.`;
+    const textoA = `${nome} (CPF/CNPJ: ${cnpj}), residente/sediado(a) em ${local}, declara para os devidos fins que os gêneros alimentícios a serem entregues são oriundos de produção própria (para Fornecedor Individual) são produzidos pelos agricultores familiares (para Grupo Informal) ou são produzidos pelos associados (para o Grupo Formal) relacionados no Projeto de Venda.\nE, por ser expressão da verdade, firma a presente Declaração.`;
     yA = _bloco(doc, textoA, yA);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(FS);
@@ -390,7 +390,7 @@
 
     let yB = _titulo(doc, "B)   DECLARAÇÃO DE CUMPRIMENTO AO DISPOSTO NO INCISO XXXIII", "DO ARTIGO 7º DA CONSTITUIÇÃO FEDERAL", yA);
     yB += 6;
-    const textoB = `${nome}, inscrita no CPF/CNPJ n.º ${cnpj}, por intermédio de seu representante legal. DECLARA, para fins do disposto no inciso VI, do art. 68, da Lei 14.133/21, e inciso XXXIII do art. 7º da Constituição Federal, que não emprega menor de dezoito anos em trabalho noturno, perigoso ou insalubre e não emprega menor de dezesseis anos. Ressalva: Emprega menor, a partir de quatorze anos, na condição de aprendiz ( ). (Observação: em caso afirmativo, assinalar a ressalva acima).`;
+    const textoB = `${nome}, inscrito(a) no CPF/CNPJ n.º ${cnpj}. DECLARA, para fins do disposto no inciso VI, do art. 68, da Lei 14.133/21, e inciso XXXIII do art. 7º da Constituição Federal, que não emprega menor de dezoito anos em trabalho noturno, perigoso ou insalubre e não emprega menor de dezesseis anos. Ressalva: Emprega menor, a partir de quatorze anos, na condição de aprendiz ( ). (Observação: em caso afirmativo, assinalar a ressalva acima).`;
     yB = _bloco(doc, textoB, yB);
 
     // ── FOLHA 2: C + D ───────────────────
