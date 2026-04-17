@@ -5,15 +5,15 @@
 // ── Listagem ──────────────────────────────
 
 async function renderResponsaveis() {
-  document.getElementById('breadcrumb').textContent = '';
-  showLoading('Carregando responsáveis...');
+  document.getElementById("breadcrumb").textContent = "";
+  showLoading("Carregando responsáveis...");
 
   const [resps, projets] = await Promise.all([
-    load('responsaveis'),
-    load('projetos'),
+    load("responsaveis"),
+    load("projetos"),
   ]);
 
-  document.getElementById('content').innerHTML = `
+  document.getElementById("content").innerHTML = `
     <div class="flex items-center justify-between mb-24">
       <div>
         <h2 style="font-size:18px;font-weight:600">Responsáveis Cadastrados</h2>
@@ -26,33 +26,34 @@ async function renderResponsaveis() {
         Novo Responsável
       </button>
     </div>
-    ${resps.length
-      ? `<div class="resp-grid">${resps.map(r => _cardResponsavel(r, projets)).join('')}</div>`
-      : `<div class="empty">
+    ${
+      resps.length
+        ? `<div class="resp-grid">${resps.map((r) => _cardResponsavel(r, projets)).join("")}</div>`
+        : `<div class="empty">
            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
              <circle cx="9" cy="7" r="4"/>
            </svg>
            <p>Nenhum responsável cadastrado ainda.</p>
-         </div>`}
+         </div>`
+    }
   `;
 }
 
 function _cardResponsavel(r, projets) {
-  const nProj  = projets.filter(p => p.responsavelId === r.id).length;
-  const docLabel = (r.docTipo === 'cpf' ? 'CPF' : 'CNPJ');
+  const nProj = projets.filter((p) => p.responsavelId === r.id).length;
+  const docLabel = r.docTipo === "cpf" ? "CPF" : "CNPJ";
   return `
     <div class="resp-card">
       <div class="resp-card-badge">${nProj} proj.</div>
       <div class="resp-card-name">${r.nome}</div>
       <div class="resp-card-meta">
-        ${r.cnpj      ? `${docLabel}: ${r.cnpj}<br>` : ''}
-        ${r.municipio ? r.municipio                   : ''}
+        ${r.cnpj ? `${docLabel}: ${r.cnpj}<br>` : ""}
+        ${r.municipio ? r.municipio : ""}
       </div>
       <div class="resp-card-actions">
         <button class="btn btn-primary btn-sm"   onclick="abrirResponsavel('${r.id}')">Ver Projetos</button>
         <button class="btn btn-secondary btn-sm" onclick="editarResponsavel('${r.id}')">Editar</button>
-        <button class="btn btn-danger btn-sm"    onclick="excluirResponsavel('${r.id}')">Excluir</button>
       </div>
     </div>`;
 }
@@ -61,28 +62,29 @@ function _cardResponsavel(r, projets) {
 
 function abrirResponsavel(id) {
   state.responsavelSelecionado = id;
-  state.paginaAtual = 'responsaveis';
+  state.paginaAtual = "responsaveis";
   renderDetalheResponsavel(id);
 }
 
 async function renderDetalheResponsavel(id) {
   showLoading();
   const [resps, projets, ferns, prods] = await Promise.all([
-    load('responsaveis'),
-    load('projetos'),
-    load('fornecedores'),
-    load('produtos'),
+    load("responsaveis"),
+    load("projetos"),
+    load("fornecedores"),
+    load("produtos"),
   ]);
 
-  const resp = resps.find(r => r.id === id);
+  const resp = resps.find((r) => r.id === id);
   if (!resp) return renderResponsaveis();
 
-  const meusProjetos = projets.filter(p => p.responsavelId === id);
-  document.getElementById('breadcrumb').textContent = `Responsáveis › ${resp.nome}`;
+  const meusProjetos = projets.filter((p) => p.responsavelId === id);
+  document.getElementById("breadcrumb").textContent =
+    `Responsáveis › ${resp.nome}`;
 
-  const docLabel = resp.docTipo === 'cpf' ? 'CPF' : 'CNPJ';
+  const docLabel = resp.docTipo === "cpf" ? "CPF" : "CNPJ";
 
-  document.getElementById('content').innerHTML = `
+  document.getElementById("content").innerHTML = `
     <div class="back-btn" onclick="renderResponsaveis()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="15 18 9 12 15 6"/>
@@ -97,15 +99,15 @@ async function renderDetalheResponsavel(id) {
       </div>
       <div class="card-body">
         <div class="form-grid cols-3">
-          ${_di(docLabel,       resp.cnpj,          true)}
-          ${_di('Município',    resp.municipio)}
-          ${_di('CEP',          resp.cep)}
-          ${_di('Endereço',     resp.endereco)}
-          ${_di('Telefone',     resp.telefone)}
-          ${_di('Banco',        resp.banco)}
-          ${_di('Agência',      resp.agencia,        true)}
-          ${_di('Conta',        resp.conta,          true)}
-          ${resp.caracteristicas ? _di('Características', resp.caracteristicas) : ''}
+          ${_di(docLabel, resp.cnpj, true)}
+          ${_di("Município", resp.municipio)}
+          ${_di("CEP", resp.cep)}
+          ${_di("Endereço", resp.endereco)}
+          ${_di("Telefone", resp.telefone)}
+          ${_di("Banco", resp.banco)}
+          ${_di("Agência", resp.agencia, true)}
+          ${_di("Conta", resp.conta, true)}
+          ${resp.caracteristicas ? _di("Características", resp.caracteristicas) : ""}
         </div>
       </div>
     </div>
@@ -122,27 +124,34 @@ async function renderDetalheResponsavel(id) {
       </button>
     </div>
 
-    ${meusProjetos.length
-      ? meusProjetos.map(p => _cardProjetoDetalhe(p, id, ferns, prods)).join('')
-      : `<div class="empty"><p>Nenhum projeto cadastrado para este responsável.</p></div>`}
+    ${
+      meusProjetos.length
+        ? meusProjetos
+            .map((p) => _cardProjetoDetalhe(p, id, ferns, prods))
+            .join("")
+        : `<div class="empty"><p>Nenhum projeto cadastrado para este responsável.</p></div>`
+    }
   `;
 }
 
 function _di(label, valor, mono = false) {
-  if (!valor) return '';
+  if (!valor) return "";
   return `
     <div>
       <div class="text-muted text-sm">${label}</div>
-      <div ${mono ? 'class="font-mono"' : ''} style="font-size:14px">${valor}</div>
+      <div ${mono ? 'class="font-mono"' : ""} style="font-size:14px">${valor}</div>
     </div>`;
 }
 
 function _cardProjetoDetalhe(p, respId, ferns, prods) {
-  const fps   = ferns.filter(f => f.projetoId === p.id);
-  const fIds  = fps.map(f => f.id);
+  const fps = ferns.filter((f) => f.projetoId === p.id);
+  const fIds = fps.map((f) => f.id);
   const total = prods
-    .filter(x => fIds.includes(x.fornecedorId))
-    .reduce((s, x) => s + (parseFloat(x.quantidade) * parseFloat(x.preco) || 0), 0);
+    .filter((x) => fIds.includes(x.fornecedorId))
+    .reduce(
+      (s, x) => s + (parseFloat(x.quantidade) * parseFloat(x.preco) || 0),
+      0,
+    );
 
   return `
     <div class="card mb-16">
@@ -165,50 +174,65 @@ function _cardProjetoDetalhe(p, respId, ferns, prods) {
 function abrirModalResp(id) {
   state.editandoResp = id || null;
   const resps = state._cacheResps || [];
-  const el    = id ? resps.find(r => r.id === id) : null;
+  const el = id ? resps.find((r) => r.id === id) : null;
 
-  document.getElementById('modal-resp-title').textContent = el ? 'Editar Responsável' : 'Novo Responsável';
+  document.getElementById("modal-resp-title").textContent = el
+    ? "Editar Responsável"
+    : "Novo Responsável";
 
   // Campos input simples
-  ['nome','cep','endereco','municipio','telefone','banco','agencia','conta'].forEach(f => {
-    const inp = document.getElementById('r-' + f);
-    if (inp) inp.value = el ? (el[f] || '') : '';
+  [
+    "nome",
+    "cep",
+    "endereco",
+    "municipio",
+    "telefone",
+    "banco",
+    "agencia",
+    "conta",
+  ].forEach((f) => {
+    const inp = document.getElementById("r-" + f);
+    if (inp) inp.value = el ? el[f] || "" : "";
   });
 
   // Textarea características
-  const carEl = document.getElementById('r-caracteristicas');
+  const carEl = document.getElementById("r-caracteristicas");
   if (carEl) {
-    carEl.value = el ? (el.caracteristicas || '') : '';
-    carEl.style.height = 'auto';
-    carEl.style.height = carEl.scrollHeight + 'px';
+    carEl.value = el ? el.caracteristicas || "" : "";
+    carEl.style.height = "auto";
+    carEl.style.height = carEl.scrollHeight + "px";
   }
 
   // Restaura tipo do documento (CPF ou CNPJ)
-  const docTipo = el ? (el.docTipo || 'cnpj') : 'cnpj';
+  const docTipo = el ? el.docTipo || "cnpj" : "cnpj";
 
   // Garante que o input tem o id correto antes de tentar acessar
-  const docInputAtual = document.getElementById('r-cnpj') || document.getElementById('r-cpf');
+  const docInputAtual =
+    document.getElementById("r-cnpj") || document.getElementById("r-cpf");
   if (docInputAtual) {
-    docInputAtual.id          = 'r-' + docTipo;
-    docInputAtual.placeholder = docTipo === 'cnpj' ? '00.000.000/0000-00' : '000.000.000-00';
-    docInputAtual.value       = el ? (el.cnpj || '') : '';
+    docInputAtual.id = "r-" + docTipo;
+    docInputAtual.placeholder =
+      docTipo === "cnpj" ? "00.000.000/0000-00" : "000.000.000-00";
+    docInputAtual.value = el ? el.cnpj || "" : "";
   }
 
   // Atualiza label e radio
-  const labelEl = document.getElementById('r-doc-tipo-label');
+  const labelEl = document.getElementById("r-doc-tipo-label");
   if (labelEl) labelEl.textContent = docTipo.toUpperCase();
 
-  const radio = document.querySelector(`input[name="r-doc-tipo"][value="${docTipo}"]`);
+  const radio = document.querySelector(
+    `input[name="r-doc-tipo"][value="${docTipo}"]`,
+  );
   if (radio) radio.checked = true;
 
   // Re-aplica máscara correta
-  _aplicarMascara('r-' + docTipo, docTipo === 'cnpj' ? _mCNPJ : _mCPF);
+  _aplicarMascara("r-" + docTipo, docTipo === "cnpj" ? _mCNPJ : _mCPF);
 
-  openModal('modal-resp');
+  openModal("modal-resp");
 }
 
 async function editarResponsavel(id) {
-  const resps = await load('responsaveis');
+  const resps = await load("responsaveis");
   state._cacheResps = resps;
   abrirModalResp(id);
 }
@@ -216,69 +240,54 @@ async function editarResponsavel(id) {
 // ── Modal salvar ──────────────────────────
 
 async function salvarResponsavel() {
+  const btn = document.querySelector("#modal-resp .btn-primary");
+  if (btn && btn.disabled) return; // ← bloqueia duplo clique
+  _setBtnLoading(btn, true);
+
   const obj = {};
 
-  // Campos input simples
-  ['nome','cep','endereco','municipio','telefone','banco','agencia','conta'].forEach(f => {
-    const inp = document.getElementById('r-' + f);
-    obj[f] = inp ? inp.value.trim() : '';
+  [
+    "nome",
+    "cep",
+    "endereco",
+    "municipio",
+    "telefone",
+    "banco",
+    "agencia",
+    "conta",
+  ].forEach((f) => {
+    const inp = document.getElementById("r-" + f);
+    obj[f] = inp ? inp.value.trim() : "";
   });
 
-  // CPF ou CNPJ — detecta qual está ativo pelo id
-  const docElCNPJ = document.getElementById('r-cnpj');
-  const docElCPF  = document.getElementById('r-cpf');
-  const docTipo   = docElCNPJ ? 'cnpj' : 'cpf';
-  const docEl     = docElCNPJ || docElCPF;
-  obj.cnpj    = docEl ? docEl.value.trim() : '';
+  const docElCNPJ = document.getElementById("r-cnpj");
+  const docElCPF = document.getElementById("r-cpf");
+  const docTipo = docElCNPJ ? "cnpj" : "cpf";
+  const docEl = docElCNPJ || docElCPF;
+  obj.cnpj = docEl ? docEl.value.trim() : "";
   obj.docTipo = docTipo;
 
-  // Textarea separado
-  const carEl = document.getElementById('r-caracteristicas');
-  obj.caracteristicas = carEl ? carEl.value.trim() : '';
+  const carEl = document.getElementById("r-caracteristicas");
+  obj.caracteristicas = carEl ? carEl.value.trim() : "";
 
-  if (!obj.nome) { alert('Informe o nome do responsável.'); return; }
+  if (!obj.nome) {
+    alert("Informe o nome do responsável.");
+    _setBtnLoading(btn, false);
+    return;
+  }
 
   const id = state.editandoResp || uid();
   try {
-    await saveDoc('responsaveis', id, obj);
-    closeModal('modal-resp');
-    showToast(state.editandoResp ? 'Responsável atualizado!' : 'Responsável salvo!');
+    await saveDoc("responsaveis", id, obj);
+    closeModal("modal-resp");
+    showToast(
+      state.editandoResp ? "Responsável atualizado!" : "Responsável salvo!",
+    );
     renderResponsaveis();
   } catch (e) {
     console.error(e);
-    showToast('Erro ao salvar. Tente novamente.', 'error');
-  }
-}
-
-// ── Excluir (cascata) ─────────────────────
-
-async function excluirResponsavel(id) {
-  if (!confirm('Excluir responsável e todos os dados vinculados?')) return;
-  showLoading('Excluindo...');
-
-  try {
-    const projets = await load('projetos');
-    const meus    = projets.filter(p => p.responsavelId === id);
-
-    for (const p of meus) {
-      const ferns = await load('fornecedores');
-      const fps   = ferns.filter(f => f.projetoId === p.id);
-
-      for (const f of fps) {
-        const prods = await load('produtos');
-        for (const pr of prods.filter(x => x.fornecedorId === f.id)) {
-          await deleteDoc('produtos', pr.id);
-        }
-        await deleteDoc('fornecedores', f.id);
-      }
-      await deleteDoc('projetos', p.id);
-    }
-    await deleteDoc('responsaveis', id);
-
-    showToast('Responsável excluído.');
-    renderResponsaveis();
-  } catch (e) {
-    console.error(e);
-    showToast('Erro ao excluir.', 'error');
+    showToast("Erro ao salvar. Tente novamente.", "error");
+  } finally {
+    _setBtnLoading(btn, false);
   }
 }

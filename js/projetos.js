@@ -5,17 +5,17 @@
 // ── Listagem ──────────────────────────────
 
 async function renderProjetos() {
-  document.getElementById('breadcrumb').textContent = '';
-  showLoading('Carregando projetos...');
+  document.getElementById("breadcrumb").textContent = "";
+  showLoading("Carregando projetos...");
 
   const [projets, resps, ferns, prods] = await Promise.all([
-    load('projetos'),
-    load('responsaveis'),
-    load('fornecedores'),
-    load('produtos'),
+    load("projetos"),
+    load("responsaveis"),
+    load("fornecedores"),
+    load("produtos"),
   ]);
 
-  document.getElementById('content').innerHTML = `
+  document.getElementById("content").innerHTML = `
     <div class="flex items-center justify-between mb-24">
       <div>
         <h2 style="font-size:18px;font-weight:600">Projetos</h2>
@@ -31,14 +31,16 @@ async function renderProjetos() {
 
     <div class="card">
       <div style="padding:0">
-        ${projets.length
-          ? _tabelaProjetos(projets, resps, ferns, prods)
-          : `<div class="empty">
+        ${
+          projets.length
+            ? _tabelaProjetos(projets, resps, ferns, prods)
+            : `<div class="empty">
                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
                </svg>
                <p>Nenhum projeto cadastrado ainda.</p>
-             </div>`}
+             </div>`
+        }
       </div>
     </div>
   `;
@@ -46,13 +48,16 @@ async function renderProjetos() {
 
 function _tabelaProjetos(projets, resps, ferns, prods) {
   const rows = projets
-    .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
-    .map(p => {
-      const r    = resps.find(x => x.id === p.responsavelId);
-      const fIds = ferns.filter(f => f.projetoId === p.id).map(f => f.id);
+    .sort((a, b) => (b.data || "").localeCompare(a.data || ""))
+    .map((p) => {
+      const r = resps.find((x) => x.id === p.responsavelId);
+      const fIds = ferns.filter((f) => f.projetoId === p.id).map((f) => f.id);
       const total = prods
-        .filter(x => fIds.includes(x.fornecedorId))
-        .reduce((s, x) => s + (parseFloat(x.quantidade) * parseFloat(x.preco) || 0), 0);
+        .filter((x) => fIds.includes(x.fornecedorId))
+        .reduce(
+          (s, x) => s + (parseFloat(x.quantidade) * parseFloat(x.preco) || 0),
+          0,
+        );
 
       return `<tr>
         <td><strong>${p.nome}</strong></td>
@@ -61,10 +66,10 @@ function _tabelaProjetos(projets, resps, ferns, prods) {
         <td><span class="badge badge-green font-mono">${fmt(total)}</span></td>
         <td class="flex gap-8">
           <button class="btn btn-primary btn-sm"  onclick="abrirProjeto('${p.id}')">Abrir</button>
-          <button class="btn btn-danger btn-sm"   onclick="excluirProjeto('${p.id}')">Excluir</button>
         </td>
       </tr>`;
-    }).join('');
+    })
+    .join("");
 
   return `
     <div class="table-wrap">
@@ -83,36 +88,57 @@ function _tabelaProjetos(projets, resps, ferns, prods) {
 // ── Modal ─────────────────────────────────
 
 async function abrirModalProj(respId) {
-  const resps = await load('responsaveis');
-  const sel   = document.getElementById('p-resp');
+  const resps = await load("responsaveis");
+  const sel = document.getElementById("p-resp");
 
   sel.innerHTML = resps.length
-    ? resps.map(r =>
-        `<option value="${r.id}" ${r.id === respId ? 'selected' : ''}>${r.nome}</option>`
-      ).join('')
+    ? resps
+        .map(
+          (r) =>
+            `<option value="${r.id}" ${r.id === respId ? "selected" : ""}>${r.nome}</option>`,
+        )
+        .join("")
     : '<option value="">— Nenhum responsável —</option>';
 
-  document.getElementById('p-nome').value       = '';
-  document.getElementById('p-data').value       = new Date().toISOString().split('T')[0];
-  document.getElementById('p-mecanismos').value = '';
-  openModal('modal-proj');
+  document.getElementById("p-nome").value = "";
+  document.getElementById("p-data").value = new Date()
+    .toISOString()
+    .split("T")[0];
+  document.getElementById("p-mecanismos").value = "";
+  openModal("modal-proj");
 }
 
 async function salvarProjeto() {
-  const nome       = document.getElementById('p-nome').value.trim();
-  const resp       = document.getElementById('p-resp').value;
-  const data       = document.getElementById('p-data').value;
-  const mecanismos = document.getElementById('p-mecanismos').value.trim(); // ← captura
+  const btn = document.querySelector("#modal-proj .btn-primary");
+  if (btn && btn.disabled) return;
+  _setBtnLoading(btn, true);
 
-  if (!nome) { alert('Informe o nome do projeto.'); return; }
-  if (!resp) { alert('Selecione um responsável.'); return; }
+  const nome = document.getElementById("p-nome").value.trim();
+  const resp = document.getElementById("p-resp").value;
+  const data = document.getElementById("p-data").value;
+  const mecanismos = document.getElementById("p-mecanismos").value.trim();
+
+  if (!nome) {
+    alert("Informe o nome do projeto.");
+    _setBtnLoading(btn, false);
+    return;
+  }
+  if (!resp) {
+    alert("Selecione um responsável.");
+    _setBtnLoading(btn, false);
+    return;
+  }
 
   try {
     const id = uid();
-    await saveDoc('projetos', id, { responsavelId: resp, nome, data, mecanismos }); // ← salva
-    closeModal('modal-proj');
-    showToast('Projeto salvo!');
-
+    await saveDoc("projetos", id, {
+      responsavelId: resp,
+      nome,
+      data,
+      mecanismos,
+    });
+    closeModal("modal-proj");
+    showToast("Projeto salvo!");
     if (state.responsavelSelecionado) {
       renderDetalheResponsavel(state.responsavelSelecionado);
     } else {
@@ -120,34 +146,36 @@ async function salvarProjeto() {
     }
   } catch (e) {
     console.error(e);
-    showToast('Erro ao salvar projeto.', 'error');
+    showToast("Erro ao salvar projeto.", "error");
+  } finally {
+    _setBtnLoading(btn, false);
   }
 }
 
 // ── Excluir ───────────────────────────────
 
 async function excluirProjeto(id, respId) {
-  if (!confirm('Excluir projeto e todos os dados vinculados?')) return;
-  showLoading('Excluindo...');
+  if (!confirm("Excluir projeto e todos os dados vinculados?")) return;
+  showLoading("Excluindo...");
 
   try {
-    const ferns = await load('fornecedores');
-    const fps   = ferns.filter(f => f.projetoId === id);
+    const ferns = await load("fornecedores");
+    const fps = ferns.filter((f) => f.projetoId === id);
 
     for (const f of fps) {
-      const prods = await load('produtos');
-      for (const p of prods.filter(x => x.fornecedorId === f.id)) {
-        await deleteDoc('produtos', p.id);
+      const prods = await load("produtos");
+      for (const p of prods.filter((x) => x.fornecedorId === f.id)) {
+        await deleteDoc("produtos", p.id);
       }
-      await deleteDoc('fornecedores', f.id);
+      await deleteDoc("fornecedores", f.id);
     }
-    await deleteDoc('projetos', id);
+    await deleteDoc("projetos", id);
 
-    showToast('Projeto excluído.');
+    showToast("Projeto excluído.");
     if (respId) renderDetalheResponsavel(respId);
     else renderProjetos();
   } catch (e) {
     console.error(e);
-    showToast('Erro ao excluir.', 'error');
+    showToast("Erro ao excluir.", "error");
   }
 }

@@ -226,3 +226,16 @@ function toggleDocTipo(prefixo, tipo) {
   input.parentNode.replaceChild(clone, input);
   _aplicarMascara(prefixo + '-' + tipo, tipo === 'cnpj' ? _mCNPJ : _mCPF);
 }
+
+// ── Proteção anti-duplo clique ────────────
+function _setBtnLoading(btnEl, loading) {
+  if (!btnEl) return;
+  if (loading) {
+    btnEl.disabled = true;
+    btnEl._textoOriginal = btnEl.textContent;
+    btnEl.textContent = 'Salvando...';
+  } else {
+    btnEl.disabled = false;
+    btnEl.textContent = btnEl._textoOriginal || 'Salvar';
+  }
+}
