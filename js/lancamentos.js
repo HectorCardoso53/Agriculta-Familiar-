@@ -116,7 +116,7 @@ function _blocoFornecedor(f, prods) {
           <strong>${f.nome}</strong>
 
           <div class="text-muted text-sm" style="margin-top:4px">
-            CPF: ${f.cpf || '—'} · DAP: ${f.dap || '—'}<br>
+            CPF: ${f.cpf || '—'} · CAF OU NIS: ${f.dap || '—'}<br>
             Banco: ${f.banco || '—'} · Ag: ${f.agencia || '—'} · Conta: ${f.conta || '—'}
           </div>
         </div>

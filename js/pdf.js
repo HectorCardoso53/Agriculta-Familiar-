@@ -155,16 +155,6 @@
       const yDados = doc.lastAutoTable.finalY;
       doc.autoTable({
         startY: yDados, theme: "grid", tableWidth: CONTENT_W,
-        body: [["Banco", resp.banco || "", "Agência", resp.agencia || "", "Conta", resp.conta || ""]],
-        bodyStyles: { textColor: [0, 0, 0] },
-        columnStyles: {
-          0: { cellWidth: 18, fontStyle: "bold", fillColor: BLUE_H },
-          1: { cellWidth: 57 },
-          2: { cellWidth: 18, fontStyle: "bold", fillColor: BLUE_H },
-          3: { cellWidth: 27 },
-          4: { cellWidth: 15, fontStyle: "bold", fillColor: BLUE_H },
-          5: { cellWidth: 45 },
-        },
         margin: { left: MARGIN, right: MARGIN },
       });
 
@@ -187,7 +177,7 @@
       const bodyForns = meusFerns.map((f) => [f.nome, f.cpf || "—", f.dap || "—", f.banco || "—", f.agencia || "—", f.conta || "—"]);
       doc.autoTable({
         startY: y, theme: "grid", tableWidth: CONTENT_W,
-        head: [["Fornecedor", "CPF", "CAF", "Banco", "Agência", "Conta"]],
+        head: [["Fornecedor", "CPF", "CAF/NISS", "Banco", "Agência", "Conta"]],
         body: bodyForns,
         headStyles: { fillColor: BLUE, textColor: 255, fontSize: 8 },
         bodyStyles: { textColor: [0, 0, 0] },
