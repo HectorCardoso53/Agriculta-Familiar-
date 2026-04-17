@@ -86,7 +86,8 @@
     </div>
 
     <div class="sidebar-doc">
-      <a href="https://oriximina.1doc.com.br/b.php?pg=o/wp&service=01KP8MJPKMWY5QJVYH4DBVTGBH" target="_blank" class="btn-doc">
+      <a href="https://oriximina.1doc.com.br/b.php?pg=o/wp&service=01KP8MJPKMWY5QJVYH4DBVTGBH" target="_blank"
+        class="btn-doc">
         <img src="img/1doc.png" alt="Prefeitura">
         <span>1Doc Prefeitura</span>
       </a>
@@ -286,7 +287,6 @@
             <input id="f-nome" placeholder="Nome completo" required>
           </div>
 
-          <!-- CPF ou CNPJ toggle -->
           <div class="form-group">
             <label id="f-doc-label">
               <span id="f-doc-tipo-label">CPF</span>
@@ -309,9 +309,27 @@
             <input id="f-dap" placeholder="Número da CAF ou NIS" required>
           </div>
 
-          <div class="form-group">
+          <div class="form-group full">
             <label>Banco <span style="color:var(--red)">*</span></label>
-            <input id="f-banco" placeholder="Nome do banco" required>
+            <div class="select-wrap">
+              <select id="f-banco" required onchange="onBancoChange('f')">
+                <option value="">— Selecione o banco —</option>
+                <option value="BB">Banco do Brasil</option>
+                <option value="Bradesco">Bradesco</option>
+                <option value="Caixa">Caixa Econômica Federal</option>
+                <option value="Itaú">Itaú</option>
+                <option value="Santander">Santander</option>
+                <option value="Nubank">Nubank</option>
+                <option value="Inter">Banco Inter</option>
+                <option value="Sicredi">Sicredi</option>
+                <option value="Sicoob">Sicoob</option>
+                <option value="BRB">BRB</option>
+                <option value="C6">C6 Bank</option>
+                <option value="PicPay">PicPay</option>
+                <option value="Mercado Pago">Mercado Pago</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
           </div>
 
           <div class="form-group">
