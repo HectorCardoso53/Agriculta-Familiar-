@@ -21,27 +21,20 @@ async function renderLancamentos() {
     return;
   }
 
-  // Garante projeto selecionado válido
   let pid = state.projetoSelecionado;
   if (!pid || !projets.find((p) => p.id === pid)) {
-    pid = projets.sort((a, b) => (b.data || "").localeCompare(a.data || ""))[0]
-      .id;
+    pid = projets.sort((a, b) => (b.data || "").localeCompare(a.data || ""))[0].id;
     state.projetoSelecionado = pid;
   }
 
-  const proj = projets.find((p) => p.id === pid);
-  const resp = proj ? resps.find((r) => r.id === proj.responsavelId) : null;
+  const proj    = projets.find((p) => p.id === pid);
+  const resp    = proj ? resps.find((r) => r.id === proj.responsavelId) : null;
   const meusFer = ferns.filter((f) => f.projetoId === pid);
-  const fIds = meusFer.map((f) => f.id);
-  const meusP = prods.filter((p) => fIds.includes(p.fornecedorId));
-  const totalP = meusP.reduce(
-    (s, p) => s + (parseFloat(p.quantidade) * parseFloat(p.preco) || 0),
-    0,
-  );
+  const fIds    = meusFer.map((f) => f.id);
+  const meusP   = prods.filter((p) => fIds.includes(p.fornecedorId));
+  const totalP  = meusP.reduce((s, p) => s + (parseFloat(p.quantidade) * parseFloat(p.preco) || 0), 0);
 
   document.getElementById("content").innerHTML = `
-
-    <!-- ── Barra superior ── -->
     <div class="flex items-center justify-between mb-24" style="flex-wrap:wrap;gap:12px">
       <div class="flex items-center gap-12" style="flex-wrap:wrap">
         ${_seletorProjeto(projets, resps, pid)}
@@ -49,12 +42,8 @@ async function renderLancamentos() {
         ${resp ? `<span class="text-muted text-sm">${resp.nome}</span>` : ""}
       </div>
       <div class="flex gap-8" style="flex-wrap:wrap">
-        <span class="badge badge-green font-mono" style="font-size:13px;padding:6px 12px">
-          ${fmt(totalP)}
-        </span>
-        ${
-          proj
-            ? `
+        <span class="badge badge-green font-mono" style="font-size:13px;padding:6px 12px">${fmt(totalP)}</span>
+        ${proj ? `
           <button class="btn btn-amber btn-sm" onclick="gerarPDF('${pid}')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -69,10 +58,7 @@ async function renderLancamentos() {
               <rect x="6" y="14" width="12" height="8"/>
             </svg>
             Gerar e Imprimir
-          </button>
-        `
-            : ""
-        }
+          </button>` : ""}
         <button class="btn btn-primary btn-sm" onclick="abrirModalForn('${pid}')">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -82,18 +68,15 @@ async function renderLancamentos() {
       </div>
     </div>
 
-    <!-- ── Blocos de fornecedores ── -->
-    ${
-      meusFer.length
-        ? meusFer.map((f) => _blocoFornecedor(f, prods)).join("")
-        : `<div class="empty">
+    ${meusFer.length
+      ? meusFer.map((f) => _blocoFornecedor(f, prods)).join("")
+      : `<div class="empty">
            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
              <path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
              <circle cx="12" cy="12" r="3"/>
            </svg>
            <p>Nenhum fornecedor neste projeto.<br>Clique em "+ Fornecedor" para começar.</p>
-         </div>`
-    }
+         </div>`}
   `;
 }
 
@@ -103,11 +86,8 @@ function _seletorProjeto(projets, resps, pid) {
     .sort((a, b) => (b.data || "").localeCompare(a.data || ""))
     .map((p) => {
       const r = resps.find((x) => x.id === p.responsavelId);
-      return `<option value="${p.id}" ${p.id === pid ? "selected" : ""}>
-        ${p.nome}${r ? " — " + r.nome : ""}
-      </option>`;
-    })
-    .join("");
+      return `<option value="${p.id}" ${p.id === pid ? "selected" : ""}>${p.nome}${r ? " — " + r.nome : ""}</option>`;
+    }).join("");
 
   return `
     <div class="select-wrap" style="min-width:260px">
@@ -118,51 +98,42 @@ function _seletorProjeto(projets, resps, pid) {
 // ── Bloco de um fornecedor ────────────────
 function _blocoFornecedor(f, prods) {
   const ps = prods.filter((p) => p.fornecedorId === f.id);
-  const tf = ps.reduce(
-    (s, p) => s + (parseFloat(p.quantidade) * parseFloat(p.preco) || 0),
-    0,
-  );
+  const tf = ps.reduce((s, p) => s + (parseFloat(p.quantidade) * parseFloat(p.preco) || 0), 0);
 
   return `
     <div class="fornecedor-block">
       <div class="fornecedor-block-header" onclick="toggleForn('${f.id}')">
         <div>
           <strong>${f.nome}</strong>
-
           <div class="text-muted text-sm" style="margin-top:4px">
-            CPF: ${f.cpf || "—"} · CAF OU NIS: ${f.dap || "—"}<br>
+            ${f.docTipo === 'cnpj' ? 'CNPJ' : 'CPF'}: ${f.cpf || "—"} · CAF/NIS: ${f.dap || "—"}<br>
             Banco: ${f.banco || "—"} · Ag: ${f.agencia || "—"} · Conta: ${f.conta || "—"}
           </div>
         </div>
-
         <div class="flex items-center gap-8">
           <span class="badge badge-green font-mono">${fmt(tf)}</span>
-
+          <button class="btn btn-secondary btn-sm"
+            onclick="event.stopPropagation();editarFornecedor('${f.id}')">
+            Editar
+          </button>
           <button class="btn btn-primary btn-sm"
             onclick="event.stopPropagation();abrirModalProd('${f.id}','${state.projetoSelecionado}')">
             + Produto
           </button>
-
-          <button class="btn btn-danger btn-sm"
-            onclick="event.stopPropagation();excluirFornecedor('${f.id}')">✕</button>
         </div>
       </div>
-
       <div class="fornecedor-block-body" id="forn-body-${f.id}">
-        ${
-          ps.length
-            ? _tabelaProdutos(ps)
-            : `<p class="text-muted text-sm">Nenhum produto. Clique em "+ Produto" para adicionar.</p>`
-        }
+        ${ps.length
+          ? _tabelaProdutos(ps)
+          : `<p class="text-muted text-sm">Nenhum produto. Clique em "+ Produto" para adicionar.</p>`}
       </div>
     </div>`;
 }
 
 function _tabelaProdutos(ps) {
-  const rows = ps
-    .map((p) => {
-      const tot = parseFloat(p.quantidade) * parseFloat(p.preco) || 0;
-      return `<tr>
+  const rows = ps.map((p) => {
+    const tot = parseFloat(p.quantidade) * parseFloat(p.preco) || 0;
+    return `<tr>
       <td><strong>${p.produto}</strong></td>
       <td>${p.unidade}</td>
       <td style="text-align:right" class="font-mono">${fmtN(p.quantidade)}</td>
@@ -172,8 +143,7 @@ function _tabelaProdutos(ps) {
         <button class="btn btn-danger btn-sm" onclick="excluirProduto('${p.id}')">✕</button>
       </td>
     </tr>`;
-    })
-    .join("");
+  }).join("");
 
   return `
     <div class="table-wrap">
@@ -202,9 +172,71 @@ function toggleForn(id) {
 
 function abrirModalForn(pid) {
   state.projetoSelecionado = pid;
-  ["f-nome", "f-cpf", "f-dap"].forEach((id) => {
-    document.getElementById(id).value = "";
+  state.editandoForn       = null;
+
+  // Limpa campos
+  ["f-nome", "f-dap", "f-agencia", "f-conta"].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
   });
+
+  // Reseta banco
+  const bancoEl = document.getElementById("f-banco");
+  if (bancoEl) bancoEl.value = "";
+
+  // Reseta CPF/CNPJ para CPF (padrão)
+  const docInput = document.getElementById("f-cnpj") || document.getElementById("f-cpf");
+  if (docInput) {
+    docInput.id          = "f-cpf";
+    docInput.placeholder = "000.000.000-00";
+    docInput.value       = "";
+  }
+  const label = document.getElementById("f-doc-tipo-label");
+  if (label) label.textContent = "CPF";
+  const radio = document.querySelector('input[name="f-doc-tipo"][value="cpf"]');
+  if (radio) radio.checked = true;
+
+  document.querySelector("#modal-forn .modal-title").textContent = "Novo Fornecedor";
+  openModal("modal-forn");
+}
+
+async function editarFornecedor(id) {
+  const ferns = await load("fornecedores");
+  const f = ferns.find((x) => x.id === id);
+  if (!f) return;
+
+  state.editandoForn = id;
+
+  // Nome e DAP
+  const nomeEl = document.getElementById("f-nome");
+  const dapEl  = document.getElementById("f-dap");
+  if (nomeEl) nomeEl.value = f.nome || "";
+  if (dapEl)  dapEl.value  = f.dap  || "";
+
+  // Banco
+  const bancoEl = document.getElementById("f-banco");
+  if (bancoEl) { bancoEl.value = f.banco || ""; onBancoChange("f"); }
+
+  // Agência e Conta (depois de onBancoChange que pode clonar os inputs)
+  const agEl = document.getElementById("f-agencia");
+  const ctEl = document.getElementById("f-conta");
+  if (agEl) agEl.value = f.agencia || "";
+  if (ctEl) ctEl.value = f.conta   || "";
+
+  // CPF ou CNPJ
+  const docTipo  = f.docTipo || "cpf";
+  const docInput = document.getElementById("f-cnpj") || document.getElementById("f-cpf");
+  if (docInput) {
+    docInput.id          = "f-" + docTipo;
+    docInput.placeholder = docTipo === "cnpj" ? "00.000.000/0000-00" : "000.000.000-00";
+    docInput.value       = f.cpf || "";
+  }
+  const labelEl = document.getElementById("f-doc-tipo-label");
+  if (labelEl) labelEl.textContent = docTipo.toUpperCase();
+  const radio = document.querySelector(`input[name="f-doc-tipo"][value="${docTipo}"]`);
+  if (radio) radio.checked = true;
+
+  document.querySelector("#modal-forn .modal-title").textContent = "Editar Fornecedor";
   openModal("modal-forn");
 }
 
@@ -213,17 +245,17 @@ async function salvarFornecedor() {
   if (btn && btn.disabled) return;
   _setBtnLoading(btn, true);
 
-  const docElCPF = document.getElementById("f-cpf");
+  const docElCPF  = document.getElementById("f-cpf");
   const docElCNPJ = document.getElementById("f-cnpj");
-  const docEl = docElCPF || docElCNPJ;
-  const docTipo = docElCPF ? "cpf" : "cnpj";
+  const docEl     = docElCPF || docElCNPJ;
+  const docTipo   = docElCPF ? "cpf" : "cnpj";
 
-  const nome = document.getElementById("f-nome").value.trim();
-  const cpf = docEl ? docEl.value.trim() : "";
-  const dap = document.getElementById("f-dap").value.trim();
-  const banco = document.getElementById("f-banco").value.trim();
+  const nome    = document.getElementById("f-nome").value.trim();
+  const cpf     = docEl ? docEl.value.trim() : "";
+  const dap     = document.getElementById("f-dap").value.trim();
+  const banco   = document.getElementById("f-banco").value.trim();
   const agencia = document.getElementById("f-agencia").value.trim();
-  const conta = document.getElementById("f-conta").value.trim();
+  const conta   = document.getElementById("f-conta").value.trim();
 
   if (!nome) {
     alert("Informe o nome do fornecedor.");
@@ -231,26 +263,23 @@ async function salvarFornecedor() {
     return;
   }
 
+  const id = state.editandoForn || uid();
+  state.editandoForn = null;
+
   try {
-    const id = uid();
     await saveDoc("fornecedores", id, {
       projetoId: state.projetoSelecionado,
-      nome,
-      cpf,
-      docTipo,
-      dap,
-      banco,
-      agencia,
-      conta,
+      nome, cpf, docTipo, dap, banco, agencia, conta,
     });
     closeModal("modal-forn");
-    showToast("Fornecedor adicionado!");
+    showToast(id ? "Fornecedor atualizado!" : "Fornecedor adicionado!");
     renderLancamentos();
   } catch (e) {
     console.error(e);
     showToast("Erro ao salvar fornecedor.", "error");
   } finally {
     _setBtnLoading(btn, false);
+    document.querySelector("#modal-forn .modal-title").textContent = "Novo Fornecedor";
   }
 }
 
@@ -258,61 +287,56 @@ async function salvarFornecedor() {
 
 function abrirModalProd(fid, pid) {
   state.fornecedorSelecionado = fid;
-  state.projetoSelecionado = pid;
+  state.projetoSelecionado    = pid;
 
-  // Limpa todos os campos
   ["pr-produto", "pr-qtd", "pr-preco", "pr-total"].forEach((id) => {
     document.getElementById(id).value = "";
   });
   document.getElementById("pr-unidade").value = "KG";
 
-  // Popula o select com os produtos PNAE (primeira vez)
   popularSelectPNAE();
 
-  // Reseta o select para opção vazia
   const sel = document.getElementById("pr-select-pnae");
   if (sel) sel.value = "";
 
-  // Cálculo automático do total
+  // Remove listeners antigos clonando os inputs
+  const qtdEl  = document.getElementById("pr-qtd");
+  const precoEl = document.getElementById("pr-preco");
+  const qtdClone  = qtdEl.cloneNode(true);
+  const precoClone = precoEl.cloneNode(true);
+  qtdEl.parentNode.replaceChild(qtdClone, qtdEl);
+  precoEl.parentNode.replaceChild(precoClone, precoEl);
+
   const calc = () => {
-    const q = parseFloat(document.getElementById("pr-qtd").value) || 0;
+    const q = parseFloat(document.getElementById("pr-qtd").value)   || 0;
     const p = parseFloat(document.getElementById("pr-preco").value) || 0;
     document.getElementById("pr-total").value = fmt(q * p);
   };
-  document.getElementById("pr-qtd").oninput = calc;
-  document.getElementById("pr-preco").oninput = calc;
+  qtdClone.addEventListener("input", calc);
+  precoClone.addEventListener("input", calc);
 
   openModal("modal-prod");
 }
 
 async function salvarProduto() {
-  const produto = document.getElementById("pr-produto").value.trim();
-  const unidade = document.getElementById("pr-unidade").value;
-  const quantidade = parseFloat(document.getElementById("pr-qtd").value) || 0;
-  const preco = parseFloat(document.getElementById("pr-preco").value) || 0;
+  const btn = document.querySelector("#modal-prod .btn-primary");
+  if (btn && btn.disabled) return;
+  _setBtnLoading(btn, true);
 
-  if (!produto) {
-    alert("Informe o produto.");
-    return;
-  }
-  if (!quantidade) {
-    alert("Informe a quantidade.");
-    return;
-  }
-  if (!preco) {
-    alert("Informe o preço.");
-    return;
-  }
+  const produto   = document.getElementById("pr-produto").value.trim();
+  const unidade   = document.getElementById("pr-unidade").value;
+  const quantidade = parseFloat(document.getElementById("pr-qtd").value)   || 0;
+  const preco      = parseFloat(document.getElementById("pr-preco").value) || 0;
 
-  // ── Valida limite de R$ 40.000 por fornecedor ──
+  if (!produto)    { alert("Informe o produto.");    _setBtnLoading(btn, false); return; }
+  if (!quantidade) { alert("Informe a quantidade."); _setBtnLoading(btn, false); return; }
+  if (!preco)      { alert("Informe o preço.");      _setBtnLoading(btn, false); return; }
+
+  // Valida limite de R$ 40.000 por fornecedor
   const prodsExistentes = await load("produtos");
   const totalAtual = prodsExistentes
     .filter((p) => p.fornecedorId === state.fornecedorSelecionado)
-    .reduce(
-      (s, p) =>
-        s + (parseFloat(p.quantidade) || 0) * (parseFloat(p.preco) || 0),
-      0,
-    );
+    .reduce((s, p) => s + (parseFloat(p.quantidade) || 0) * (parseFloat(p.preco) || 0), 0);
 
   const novoValor = quantidade * preco;
   const novoTotal = totalAtual + novoValor;
@@ -321,23 +345,21 @@ async function salvarProduto() {
     const disponivel = 40000 - totalAtual;
     alert(
       `⚠️ Limite de R$ 40.000,00 excedido!\n\n` +
-        `Subtotal atual deste fornecedor: ${fmt(totalAtual)}\n` +
-        `Este produto adicionaria: ${fmt(novoValor)}\n` +
-        `Total resultante: ${fmt(novoTotal)}\n\n` +
-        `Valor ainda disponível: ${fmt(disponivel > 0 ? disponivel : 0)}`,
+      `Subtotal atual deste fornecedor: ${fmt(totalAtual)}\n` +
+      `Este produto adicionaria: ${fmt(novoValor)}\n` +
+      `Total resultante: ${fmt(novoTotal)}\n\n` +
+      `Valor ainda disponível: ${fmt(disponivel > 0 ? disponivel : 0)}`
     );
+    _setBtnLoading(btn, false);
     return;
   }
 
   try {
     const id = uid();
     await saveDoc("produtos", id, {
-      projetoId: state.projetoSelecionado,
+      projetoId:    state.projetoSelecionado,
       fornecedorId: state.fornecedorSelecionado,
-      produto,
-      unidade,
-      quantidade,
-      preco,
+      produto, unidade, quantidade, preco,
     });
     closeModal("modal-prod");
     showToast("Produto adicionado!");
@@ -345,6 +367,8 @@ async function salvarProduto() {
   } catch (e) {
     console.error(e);
     showToast("Erro ao salvar produto.", "error");
+  } finally {
+    _setBtnLoading(btn, false);
   }
 }
 

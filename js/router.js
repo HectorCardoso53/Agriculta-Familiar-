@@ -25,8 +25,9 @@ function navigate(pagina) {
   render();
 }
 
-// Render despacha para a página correta (async-safe)
 function render() {
+  if (!window.currentUser) return; // ← guarda: aguarda autenticação
+
   document.getElementById('page-title').textContent = PAGE_TITLES[state.paginaAtual] || '';
 
   const pages = {
@@ -37,7 +38,6 @@ function render() {
   };
 
   const fn = pages[state.paginaAtual] || renderDashboard;
-  // Captura erros de funções async silenciosamente
   Promise.resolve(fn()).catch(err => {
     console.error('Erro ao renderizar página:', err);
     document.getElementById('content').innerHTML =
@@ -45,7 +45,6 @@ function render() {
   });
 }
 
-// Abre projeto direto na tela de lançamentos
 function abrirProjeto(id) {
   state.projetoSelecionado = id;
   state.paginaAtual        = 'lancamentos';
