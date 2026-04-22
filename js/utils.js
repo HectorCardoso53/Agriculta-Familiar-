@@ -5,7 +5,7 @@
 // ── Formatos por banco ────────────────────
 const BANCOS_FORMATO = {
   BB: { agPh: "0000-0", ctPh: "0000000-0", agMax: 5, ctMax: 9 },
-  Bradesco: { agPh: "0000-0", ctPh: "0000000-0", agMax: 5, ctMax: 9 },
+  Bradesco: { agPh: "0000-0", ctPh: "000000000-0", agMax: 5, ctMax: 10 },
   Caixa: { agPh: "0000", ctPh: "00000000000-0", agMax: 4, ctMax: 13 },
   Itaú: { agPh: "0000", ctPh: "00000-0", agMax: 4, ctMax: 6 },
   Santander: { agPh: "0000", ctPh: "000000000", agMax: 4, ctMax: 9 },
