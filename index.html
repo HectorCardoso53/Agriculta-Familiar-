@@ -312,8 +312,9 @@
           <div class="form-group full">
             <label>Banco <span style="color:var(--red)">*</span></label>
             <div class="select-wrap">
-              <select id="f-banco" required onchange="onBancoChange('f')">
+              <select id="f-banco" required onchange="onBancoChange('f');toggleBancoOutro()">
                 <option value="">— Selecione o banco —</option>
+                <option value="Banpará">Banpará</option>
                 <option value="BB">Banco do Brasil</option>
                 <option value="Bradesco">Bradesco</option>
                 <option value="Caixa">Caixa Econômica Federal</option>
@@ -327,9 +328,11 @@
                 <option value="C6">C6 Bank</option>
                 <option value="PicPay">PicPay</option>
                 <option value="Mercado Pago">Mercado Pago</option>
-                <option value="Outro">Outro</option>
+                <option value="Outro">Outro...</option>
               </select>
             </div>
+            <!-- Campo livre — aparece só quando "Outro" for selecionado -->
+            <input id="f-banco-outro" placeholder="Digite o nome do banco" style="display:none;margin-top:8px" />
           </div>
 
           <div class="form-group">

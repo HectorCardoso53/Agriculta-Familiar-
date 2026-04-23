@@ -250,18 +250,17 @@ async function salvarFornecedor() {
   const docEl     = docElCPF || docElCNPJ;
   const docTipo   = docElCPF ? "cpf" : "cnpj";
 
-  const nome    = document.getElementById("f-nome").value.trim();
-  const cpf     = docEl ? docEl.value.trim() : "";
-  const dap     = document.getElementById("f-dap").value.trim();
-  const banco   = document.getElementById("f-banco").value.trim();
-  const agencia = document.getElementById("f-agencia").value.trim();
-  const conta   = document.getElementById("f-conta").value.trim();
+  const nome       = document.getElementById("f-nome").value.trim();
+  const cpf        = docEl ? docEl.value.trim() : "";
+  const dap        = document.getElementById("f-dap").value.trim();
+  const bancoSel   = document.getElementById("f-banco").value;
+  const bancoOutro = document.getElementById("f-banco-outro")?.value.trim() || "";
+  const banco      = bancoSel === "Outro" ? bancoOutro : bancoSel;
+  const agencia    = document.getElementById("f-agencia").value.trim();
+  const conta      = document.getElementById("f-conta").value.trim();
 
-  if (!nome) {
-    alert("Informe o nome do fornecedor.");
-    _setBtnLoading(btn, false);
-    return;
-  }
+  if (!nome)  { alert("Informe o nome do fornecedor."); _setBtnLoading(btn, false); return; }
+  if (!banco) { alert("Selecione ou informe o banco."); _setBtnLoading(btn, false); return; }
 
   const id = state.editandoForn || uid();
   state.editandoForn = null;
@@ -272,7 +271,7 @@ async function salvarFornecedor() {
       nome, cpf, docTipo, dap, banco, agencia, conta,
     });
     closeModal("modal-forn");
-    showToast(id ? "Fornecedor atualizado!" : "Fornecedor adicionado!");
+    showToast(state.editandoForn === null ? "Fornecedor salvo!" : "Fornecedor atualizado!");
     renderLancamentos();
   } catch (e) {
     console.error(e);

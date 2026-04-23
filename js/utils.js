@@ -5,7 +5,8 @@
 // ── Formatos por banco ────────────────────
 const BANCOS_FORMATO = {
   BB: { agPh: "0000-0", ctPh: "0000000-0", agMax: 5, ctMax: 9 },
-  Bradesco: { agPh: "0000-0", ctPh: "000000000-0", agMax: 5, ctMax: 10 },
+  Banpará: { agPh: "0000-0", ctPh: "0000000-0", agMax: 5, ctMax: 9 },
+  Bradesco: { agPh: "0000-0", ctPh: "00000000-0", agMax: 5, ctMax: 9 },
   Caixa: { agPh: "0000", ctPh: "00000000000-0", agMax: 4, ctMax: 13 },
   Itaú: { agPh: "0000", ctPh: "00000-0", agMax: 4, ctMax: 6 },
   Santander: { agPh: "0000", ctPh: "000000000", agMax: 4, ctMax: 9 },
@@ -16,7 +17,7 @@ const BANCOS_FORMATO = {
   BRB: { agPh: "000", ctPh: "0000000-0", agMax: 3, ctMax: 9 },
   C6: { agPh: "0001", ctPh: "0000000-0", agMax: 4, ctMax: 9 },
   PicPay: { agPh: "0001", ctPh: "000000000-0", agMax: 4, ctMax: 10 },
-  "Mercado Pago": { agPh: "0001", ctPh: "0000000-0", agMax: 4, ctMax: 9 },
+  "Mercado Pago": { agPh: "0001", ctPh: "000000000-0", agMax: 4, ctMax: 11 },
 };
 
 // Máscara genérica de agência com dígito verificador
@@ -37,25 +38,23 @@ function _mContaDV(v, max) {
 }
 
 function onBancoChange(prefixo) {
-  const banco = document.getElementById(prefixo + "-banco").value;
-  const agEl = document.getElementById(prefixo + "-agencia");
-  const ctEl = document.getElementById(prefixo + "-conta");
+  const banco   = document.getElementById(prefixo + "-banco").value;
+  const agEl    = document.getElementById(prefixo + "-agencia");
+  const ctEl    = document.getElementById(prefixo + "-conta");
   const formato = BANCOS_FORMATO[banco];
 
   agEl.value = "";
   ctEl.value = "";
 
+  // Clona sempre para remover listeners antigos
+  const agClone = agEl.cloneNode(true);
+  const ctClone = ctEl.cloneNode(true);
+  agEl.parentNode.replaceChild(agClone, agEl);
+  ctEl.parentNode.replaceChild(ctClone, ctEl);
+
   if (formato) {
-    agEl.placeholder = formato.agPh;
-    ctEl.placeholder = formato.ctPh;
-
-    // Remove listeners antigos clonando os elementos
-    const agClone = agEl.cloneNode(true);
-    const ctClone = ctEl.cloneNode(true);
-    agEl.parentNode.replaceChild(agClone, agEl);
-    ctEl.parentNode.replaceChild(ctClone, ctEl);
-
-    // Aplica máscara específica do banco
+    agClone.placeholder = formato.agPh;
+    ctClone.placeholder = formato.ctPh;
     agClone.addEventListener("input", function () {
       this.value = _mAgenciaDV(this.value, formato.agMax);
     });
@@ -63,8 +62,11 @@ function onBancoChange(prefixo) {
       this.value = _mContaDV(this.value, formato.ctMax);
     });
   } else {
-    agEl.placeholder = "0000-0";
-    ctEl.placeholder = "00000-0";
+    // Outro — campo livre, sem máscara, sem limite
+    agClone.placeholder = "Número da agência";
+    ctClone.placeholder = "Número da conta";
+    agClone.removeAttribute("maxlength");
+    ctClone.removeAttribute("maxlength");
   }
 }
 
@@ -263,5 +265,18 @@ function _setBtnLoading(btnEl, loading) {
   } else {
     btnEl.disabled = false;
     btnEl.textContent = btnEl._textoOriginal || "Salvar";
+  }
+}
+
+function toggleBancoOutro() {
+  const sel    = document.getElementById('f-banco');
+  const outroEl = document.getElementById('f-banco-outro');
+  if (!sel || !outroEl) return;
+  if (sel.value === 'Outro') {
+    outroEl.style.display = 'block';
+    outroEl.focus();
+  } else {
+    outroEl.style.display = 'none';
+    outroEl.value = '';
   }
 }
