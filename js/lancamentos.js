@@ -46,7 +46,7 @@ async function renderLancamentos() {
         ${resp ? `<span class="text-muted text-sm">${resp.nome}</span>` : ""}
       </div>
       <div class="flex gap-8" style="flex-wrap:wrap">
-        <span class="badge badge-green font-mono" style="font-size:13px;padding:6px 12px">${fmt(totalP)}</span>
+        <span class="badge badge-green font-mono" id="total-projeto" style="font-size:13px;padding:6px 12px">${fmt(totalP)}</span>
         ${
           proj
             ? `
@@ -125,10 +125,14 @@ function _blocoFornecedor(f, prods) {
           </div>
         </div>
         <div class="flex items-center gap-8">
-          <span class="badge badge-green font-mono">${fmt(tf)}</span>
+          <span class="badge badge-green font-mono" id="forn-total-${f.id}">${fmt(tf)}</span>
           <button class="btn btn-secondary btn-sm"
             onclick="event.stopPropagation();editarFornecedor('${f.id}')">
             Editar
+          </button>
+          <button class="btn btn-danger btn-sm"
+            onclick="event.stopPropagation();excluirFornecedor('${f.id}')">
+            Excluir
           </button>
           <button class="btn btn-primary btn-sm"
             onclick="event.stopPropagation();abrirModalProd('${f.id}','${state.projetoSelecionado}')">
@@ -158,7 +162,7 @@ function _tabelaProdutos(ps) {
         <td style="text-align:right" class="font-mono">${fmt(p.preco)}</td>
         <td style="text-align:right" class="font-mono"><strong>${fmt(tot)}</strong></td>
         <td>
-          <button class="btn btn-danger btn-sm" onclick="excluirProduto('${p.id}')">✕</button>
+          <button class="btn btn-danger btn-sm" onclick="excluirProduto('${p.id}','${p.fornecedorId}')">✕</button>
         </td>
       </tr>`;
     })
@@ -430,7 +434,7 @@ async function salvarProduto() {
     });
     closeModal("modal-prod");
     showToast("Produto adicionado!");
-    renderLancamentos();
+    await _atualizarBlocoFornecedor(state.fornecedorSelecionado);
   } catch (e) {
     console.error(e);
     showToast("Erro ao salvar produto.", "error");
@@ -439,13 +443,61 @@ async function salvarProduto() {
   }
 }
 
-async function excluirProduto(id) {
+async function excluirProduto(id, fid) {
   if (!confirm("Excluir produto?")) return;
   try {
     await deleteDoc("produtos", id);
     showToast("Produto excluído.");
-    renderLancamentos();
+    await _atualizarBlocoFornecedor(fid);
   } catch (e) {
     showToast("Erro ao excluir.", "error");
+  }
+}
+
+async function _atualizarBlocoFornecedor(fid) {
+  const todosProds = await load("produtos");
+  const prodsForn = todosProds.filter((p) => p.fornecedorId === fid);
+
+  const bodyEl = document.getElementById("forn-body-" + fid);
+  if (bodyEl) {
+    bodyEl.innerHTML = prodsForn.length
+      ? _tabelaProdutos(prodsForn)
+      : `<p class="text-muted text-sm">Nenhum produto. Clique em "+ Produto" para adicionar.</p>`;
+  }
+
+  const tf = prodsForn.reduce(
+    (s, p) => s + (parseFloat(p.quantidade) * parseFloat(p.preco) || 0),
+    0,
+  );
+  const fornTotalEl = document.getElementById("forn-total-" + fid);
+  if (fornTotalEl) fornTotalEl.textContent = fmt(tf);
+
+  const todosDoProj = todosProds.filter((p) => p.projetoId === state.projetoSelecionado);
+  const totalP = todosDoProj.reduce(
+    (s, p) => s + (parseFloat(p.quantidade) * parseFloat(p.preco) || 0),
+    0,
+  );
+  const totalEl = document.getElementById("total-projeto");
+  if (totalEl) totalEl.textContent = fmt(totalP);
+}
+
+async function excluirFornecedor(id) {
+  const prods = await load("produtos");
+  const prodsForn = prods.filter((p) => p.fornecedorId === id);
+
+  const msg = prodsForn.length
+    ? `Excluir este fornecedor e seus ${prodsForn.length} produto(s)? Esta ação não pode ser desfeita.`
+    : "Excluir este fornecedor? Esta ação não pode ser desfeita.";
+
+  if (!confirm(msg)) return;
+
+  try {
+    await Promise.all(prodsForn.map((p) => deleteDoc("produtos", p.id)));
+    await deleteDoc("fornecedores", id);
+    showToast("Fornecedor excluído.");
+    renderLancamentos();
+  } catch (e) {
+    console.error(e);
+    showToast("Erro ao excluir fornecedor.", "error");
   }
 }
