@@ -7,6 +7,7 @@ const PAGE_TITLES = {
   responsaveis: 'Responsáveis',
   projetos:     'Projetos',
   lancamentos:  'Lançamentos',
+  relatorios:   'Relatórios',
 };
 
 function navigate(pagina) {
@@ -35,6 +36,7 @@ function render() {
     responsaveis: renderResponsaveis,
     projetos:     renderProjetos,
     lancamentos:  renderLancamentos,
+    relatorios:   renderRelatorio,
   };
 
   const fn = pages[state.paginaAtual] || renderDashboard;

@@ -54,6 +54,7 @@ function _cardResponsavel(r, projets) {
       <div class="resp-card-actions">
         <button class="btn btn-primary btn-sm"   onclick="abrirResponsavel('${r.id}')">Ver Projetos</button>
         <button class="btn btn-secondary btn-sm" onclick="editarResponsavel('${r.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm"    onclick="excluirResponsavel('${r.id}')">Excluir</button>
       </div>
     </div>`;
 }
@@ -235,6 +236,43 @@ async function editarResponsavel(id) {
   const resps = await load("responsaveis");
   state._cacheResps = resps;
   abrirModalResp(id);
+}
+
+// ── Modal salvar ──────────────────────────
+
+// ── Excluir ───────────────────────────────
+
+async function excluirResponsavel(id) {
+  if (!confirm("Excluir este responsável e todos os projetos, fornecedores e produtos vinculados?")) return;
+  showLoading("Excluindo...");
+
+  try {
+    const [projets, ferns, prods] = await Promise.all([
+      load("projetos"),
+      load("fornecedores"),
+      load("produtos"),
+    ]);
+
+    const meusProjetos = projets.filter((p) => p.responsavelId === id);
+
+    for (const p of meusProjetos) {
+      const meusFerns = ferns.filter((f) => f.projetoId === p.id);
+      for (const f of meusFerns) {
+        for (const pr of prods.filter((x) => x.fornecedorId === f.id)) {
+          await deleteDoc("produtos", pr.id);
+        }
+        await deleteDoc("fornecedores", f.id);
+      }
+      await deleteDoc("projetos", p.id);
+    }
+
+    await deleteDoc("responsaveis", id);
+    showToast("Responsável excluído.");
+    renderResponsaveis();
+  } catch (e) {
+    console.error(e);
+    showToast("Erro ao excluir. Tente novamente.", "error");
+  }
 }
 
 // ── Modal salvar ──────────────────────────
